@@ -1,15 +1,12 @@
-#include <complex>
-#include <exception>
-#include <fstream>
-#include <iostream>
-#include <string>
-#include <vector>
+import  game24;
+import <exception>;
+import <iostream>;
+import <string>;
+import <vector>;
 #include <boost/config/warning_disable.hpp>
 #include <boost/spirit/home/x3.hpp>
 #include <range/v3/all.hpp>
 
-#include "exprs.h"
-#include "cal.h"
 namespace x3    = boost::spirit::x3;
 namespace ascii = boost::spirit::x3::ascii;
 namespace parser
