@@ -95,7 +95,7 @@ jobs:
       - name: 'vcpkg package restore'
         shell: 'bash'
         run: >
-          $VCPKG_ROOT/vcpkg install catch2 fmt  --triplet ${{ matrix.triplet }}
+          $VCPKG_ROOT/vcpkg install catch2 range-v3  --triplet ${{ matrix.triplet }}
 
       - name: 'Run CMake with Ninja'
         uses: lukka/run-cmake@v3
