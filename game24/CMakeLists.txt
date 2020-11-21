@@ -2,7 +2,12 @@ find_package(range-v3 CONFIG REQUIRED)
 find_package(fmt CONFIG REQUIRED)
 
 # Generic test that uses conan libs
-add_executable(intro main.cpp)
+add_executable(game24 exprs.cpp cal.cpp )
+
+target_include_directories(game24 INTERFACE
+          $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
+         # $<INSTALL_INTERFACE:include>
+                           )
 target_link_libraries(
-  intro PRIVATE project_options project_warnings 
-                fmt::fmt fmt::fmt-header-only meta range-v3 )
+  game24 PRIVATE project_options project_warnings 
+                fmt::fmt fmt::fmt-header-only  range-v3 )

@@ -1,12 +1,16 @@
-import  game24;
-import <exception>;
-import <iostream>;
-import <string>;
-import <vector>;
+#include <complex>
+#include <exception>
+#include <fstream>
+#include <iostream>
+#include <string>
+#include <vector>
 #include <boost/config/warning_disable.hpp>
 #include <boost/spirit/home/x3.hpp>
 #include <range/v3/all.hpp>
+#include <fmt/format.h>
 
+#include "exprs.h"
+#include "cal.h"
 namespace x3    = boost::spirit::x3;
 namespace ascii = boost::spirit::x3::ascii;
 namespace parser
@@ -87,6 +91,7 @@ int main(int argc, char** argv)
 
   std::vector v{std::string(argv[1]), std::string(argv[2]), std::string(argv[3]), std::string(argv[4])};
   for (auto&& val24exprstr : getAll24Exprs(v)) {
+    //fmt::print("{}", val24exprstr)
     std::cout << val24exprstr << std::endl;
   }
 }
