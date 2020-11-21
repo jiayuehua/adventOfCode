@@ -1,5 +1,4 @@
 find_package(range-v3 CONFIG REQUIRED)
-find_package(fmt CONFIG REQUIRED)
 
 # Generic test that uses conan libs
 add_executable(game24 exprs.cpp cal.cpp )
@@ -10,4 +9,4 @@ target_include_directories(game24 INTERFACE
                            )
 target_link_libraries(
   game24 PRIVATE project_options project_warnings 
-                fmt::fmt fmt::fmt-header-only  range-v3 )
+                  range-v3 )

@@ -7,7 +7,6 @@
 #include <boost/config/warning_disable.hpp>
 #include <boost/spirit/home/x3.hpp>
 #include <range/v3/all.hpp>
-#include <fmt/format.h>
 
 #include "exprs.h"
 #include "cal.h"
