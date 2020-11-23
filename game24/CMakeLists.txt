@@ -1,5 +1,5 @@
 find_package(range-v3 CONFIG REQUIRED)
-find_package(boost-spirit CONFIG REQUIRED)
+find_package(boost CONFIG REQUIRED)
 
 # Generic test that uses conan libs
 add_executable(game24 exprs.cpp cal.cpp )
