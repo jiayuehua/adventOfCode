@@ -21,17 +21,17 @@ x3::rule<class expr, int> const   expr      = "expr";
 x3::rule<class term, int> const   term      = "term";
 x3::rule<class factor, int> const factor    = "factor";
 x3::rule<class group, int> const  group     = "group";
-auto                              indentity = [&](auto& ctx) { _val(ctx) = _attr(ctx); };
-auto                              multi     = [&](auto& ctx) { _val(ctx) *= _attr(ctx); };
-auto                              divide    = [&](auto& ctx) {
+auto                              indentity = [](auto& ctx) { _val(ctx) = _attr(ctx); };
+auto                              multi     = [](auto& ctx) { _val(ctx) *= _attr(ctx); };
+auto                              divide    = [](auto& ctx) {
   if (_attr(ctx) && (!(_val(ctx) % _attr(ctx)))) {
     _val(ctx) /= _attr(ctx);
   } else {
     _pass(ctx) = false;
   }
 };
-auto       add        = [&](auto& ctx) { _val(ctx) += _attr(ctx); };
-auto       sub        = [&](auto& ctx) { _val(ctx) -= _attr(ctx); };
+auto       add        = [](auto& ctx) { _val(ctx) += _attr(ctx); };
+auto       sub        = [](auto& ctx) { _val(ctx) -= _attr(ctx); };
 auto const expr_def   = term[indentity] >> *(('+' >> term[add]) | ('-' >> term[sub]));                 //左结合
 auto const term_def   = factor[indentity] >> *(('*' >> (factor)[multi]) | ('/' >> (factor)[divide]));  //左结合
 auto const factor_def = (int_ | group);
