@@ -12,8 +12,7 @@ on:
 jobs:
   # This workflow contains a single job called "build"
   build:
-    env:
-      VCPKG_BINARY_SOURCES: 'clear;nuget,https://nuget.pkg.github.com/jiayuehua/index.json,readwrite'
+
 
 
 
@@ -42,12 +41,10 @@ jobs:
             # To run `nuget.exe` on non-Windows platforms, we must use `mono`.
             mono: 'mono'
             vstriplet: 'WSL-GCC-Debug'  
+    env:
+      VCPKG_BINARY_SOURCES: 'clear;nuget,https://nuget.pkg.github.com/jiayuehua/index.json,readwrite'
+      vcpkgResponseFile: '${{ github.workspace }}/${{matrix.triplet}}_responsefile.txt'            
             
-            
-            
-            
-
-      
     #The type of runner that the job will run on
     #runs-on: ubuntu-latest
     runs-on: ${{ matrix.os }}
@@ -66,14 +63,17 @@ jobs:
         
       - name: Restore from cache and install vcpkg
         # Download and build vcpkg, without installing any port. If content is cached already, it is a no-op.
-        uses: lukka/run-vcpkg@v4
+        uses: lukka/run-vcpkg@v5
         with:
+          # Response file stored in source control, it provides the list of ports and triplet(s).
+          vcpkgArguments: '@${{ env.vcpkgResponseFile }}'
+
           # Location of the vcpkg as submodule of the repository.
           vcpkgDirectory: '${{ github.workspace }}/vcpkg'
           # Since the cache must be invalidated when content of the response file changes, let's
           # compute its hash and append this to the computed cache's key.
           appendedCacheKey: ${{ hashFiles(env.vcpkgResponseFile) }}
-          setupOnly: true
+          #setupOnly: true
 
 
 
@@ -92,10 +92,10 @@ jobs:
           -password "${{ secrets.GITHUB_TOKEN }}"
 
       # Omit this step if you're using manifests
-      - name: 'vcpkg package restore'
-        shell: 'bash'
-        run: >
-          $VCPKG_ROOT/vcpkg install catch2 range-v3  --triplet ${{ matrix.triplet }}
+#      - name: 'vcpkg package restore'
+#        shell: 'bash'
+#        run: >
+#          $VCPKG_ROOT/vcpkg install catch2 fmt  --triplet ${{ matrix.triplet }}
 
       - name: 'Run CMake with Ninja'
         uses: lukka/run-cmake@v3
@@ -107,4 +107,3 @@ jobs:
           cmakeListsOrSettingsJson: CMakeSettingsJson
           cmakeSettingsJsonPath: '${{ github.workspace }}/CMakeSettings.json'
           configurationRegexFilter: '${{ matrix.vstriplet }}'
-
