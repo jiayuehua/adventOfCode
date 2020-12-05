@@ -1,5 +1,6 @@
 boost-spirit
 range-v3
 catch2
+fmt
 --triplet
 x64-windows
