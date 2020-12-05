@@ -7,17 +7,12 @@
 #include <string>
 #include <array>
 #include <vector>
+#include <iterator>
 #include <unordered_map>
-
 
 int main(int argc, char **argv)
 {
   namespace views = ranges::views;
-  //std::istringstream ist(argv[1]);
-  //int l, r;
-  //ist >> l >> r;
-  //r = -r;
-  //fmt::print("{};{}\n", l, r);
   if (argc > 1) {
     std::ifstream ifs(argv[1]);
     ranges::istream_view<std::string> ist(ifs);
@@ -40,10 +35,7 @@ int main(int argc, char **argv)
                  return (l <= n && n <= r);
                });
     int r = ranges::count(s, true);
-
-
     fmt::print("{}\n", r);
-
     return 0;
   }
 }
