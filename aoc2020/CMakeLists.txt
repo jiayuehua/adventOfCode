@@ -22,4 +22,6 @@ aoc(day0202)
 aoc(day0301)
 aoc(day0302)
 aoc(day0401)
+aoc(day0501)
+aoc(day0502)
 
