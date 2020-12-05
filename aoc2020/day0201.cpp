@@ -17,7 +17,8 @@ int main(int argc, char **argv)
     std::ifstream ifs(argv[1]);
     ranges::istream_view<std::string> ist(ifs);
     std::vector<std::string> v;
-    ranges::copy(ist, std::back_inserter(v));
+    ranges::move(ist, std::back_inserter(v));
+
     int n = 0;
     auto s = views::all(v)
              | views::chunk(3) | views::transform([](auto &&range) {

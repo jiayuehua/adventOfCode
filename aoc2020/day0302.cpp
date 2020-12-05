@@ -17,7 +17,7 @@ int main(int argc, char **argv)
   if (argc > 1) {
     std::ifstream ifs(argv[1]);
     std::vector<std::string> v;
-    ranges::copy(ranges::istream<std::string>(ifs), std::back_inserter(v));
+    ranges::move(ranges::istream<std::string>(ifs), std::back_inserter(v));
     auto nv = views::all(v) | views::enumerate | views::transform([](auto &&i) {
       std::array<int, 4> res;
       for (auto n : { 1, 3, 5, 7 }) {

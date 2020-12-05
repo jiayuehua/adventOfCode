@@ -23,7 +23,7 @@ int main(int argc, char **argv)
 
     std::vector<std::string> v;
     v.reserve(1024);
-    ranges::copy(ranges::istream<std::string>(ifs), std::back_inserter(v));
+    ranges::move(ranges::istream<std::string>(ifs), std::back_inserter(v));
     auto seatNum = views::all(v) | views::transform([&a](auto &&i) {
       std::string s = "0000000111";
       ranges::transform(i, s.begin(), [&a](char c) {

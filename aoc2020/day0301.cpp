@@ -16,7 +16,7 @@ int main(int argc, char **argv)
   if (argc > 1) {
     std::ifstream ifs(argv[1]);
     std::vector<std::string> v;
-    ranges::copy(ranges::istream<std::string>(ifs), std::back_inserter(v));
+    ranges::move(ranges::istream<std::string>(ifs), std::back_inserter(v));
     auto nv = views::all(v) | views::enumerate | views::transform([](auto &&i) { 
       int linenum = std::get<0>(i);
       int colnum=linenum*3;
