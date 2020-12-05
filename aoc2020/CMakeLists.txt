@@ -14,7 +14,6 @@ target_link_libraries(
                   range-v3 range-v3-meta range-v3::meta range-v3-concepts fmt::fmt-header-only
                    )
                    endfunction()
-
 aoc(day0101)
 aoc(day0102)
 aoc(day0201)
@@ -24,4 +23,5 @@ aoc(day0302)
 aoc(day0401)
 aoc(day0501)
 aoc(day0502)
+aoc(y15day0101)
 
