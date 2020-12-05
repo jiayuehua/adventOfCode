@@ -23,7 +23,9 @@ int main(int argc, char **argv)
 
     std::vector<std::string> v;
     v.reserve(1024);
-    ranges::move(ranges::istream<std::string>(ifs), std::back_inserter(v));
+    std::istream_iterator<std::string> ib(ifs);
+    std::istream_iterator<std::string> ie;
+    std::move(ib, ie, std::back_inserter(v));
     auto seatNum = views::all(v) | views::transform([&a](auto &&i) {
       std::string s = "0000000111";
       ranges::transform(i, s.begin(), [&a](char c) {

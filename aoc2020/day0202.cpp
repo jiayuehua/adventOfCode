@@ -15,7 +15,10 @@ int main(int argc, char **argv)
   if (argc > 1) {
     std::ifstream ifs(argv[1]);
     std::vector<std::string> v;
-    ranges::move(ranges::istream<std::string>(ifs), std::back_inserter(v));
+    std::istream_iterator<std::string> ib(ifs);
+    std::istream_iterator<std::string> ie;
+    std::move(ib, ie, std::back_inserter(v));
+
     int n = 0;
     auto s = views::all(v)
              | views::chunk(3) | views::transform([](auto &&range) {

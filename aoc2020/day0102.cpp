@@ -17,8 +17,10 @@ public:
   explicit threenummul(const char *file)
   {
     std::ifstream ifs(file);
-    //ranges::istream_view<int> iv(ifs);
-    ranges::move(ranges::istream<int>(ifs), std::back_inserter(num_));
+    std::istream_iterator<int> ib(ifs);
+    std::istream_iterator<int> ie;
+    std::vector<std::string> v;
+    std::move(ib, ie, std::back_inserter(num_));
     ranges::sort(num_);
     for (auto i = num_.begin(); i != num_.end() - 2; ++i) {
       for (auto j = i + 1; j != num_.end() - 1; ++j) {
