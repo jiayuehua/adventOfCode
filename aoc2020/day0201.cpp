@@ -9,15 +9,15 @@
 #include <vector>
 #include <iterator>
 #include <unordered_map>
+#include <algorithm>
 
 int main(int argc, char **argv)
 {
   namespace views = ranges::views;
   if (argc > 1) {
     std::ifstream ifs(argv[1]);
-    ranges::istream_view<std::string> ist(ifs);
     std::vector<std::string> v;
-    ranges::move(ist, std::back_inserter(v));
+    ranges::move(ranges::istream<std::string>(ifs), std::back_inserter(v));
 
     int n = 0;
     auto s = views::all(v)
