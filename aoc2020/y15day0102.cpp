@@ -15,12 +15,12 @@ int main(int argc, char **argv)
     ifs >> s;
     int n = 0;
     fmt::print("{}\n", s);
-    ranges::for_each(s, [&n](char c) {
+    auto it = ranges::find_if(s, [&n](char c) {
       static constexpr int a[2] = { -1, 1 };
 
       n += a[c == '('];
       return n == -1;
     });
-    fmt::print("{}\n", n);
+    fmt::print("{}\n", it - s.begin() + 1);
   }
 }
