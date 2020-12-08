@@ -4,6 +4,10 @@ function(aoc arg)
 # Generic test that uses conan libs
 add_executable(${arg} "${arg}.cpp")
 
+#    find_path(CONSTEXPR_INCLUDE_DIRS "cx_algorithm.h")
+#    target_include_directories(${arg} PRIVATE ${CONSTEXPR_INCLUDE_DIRS})
+
+
 #find_path(BOOST_ITERATOR_INCLUDE_DIRS "boost/function_output_iterator.hpp")
 target_include_directories(${arg} PRIVATE
           ${CMAKE_CURRENT_SOURCE_DIR} 
@@ -23,10 +27,25 @@ aoc(day0302)
 aoc(day0401)
 aoc(day0501)
 aoc(day0502)
+aoc(aoc200601)
+aoc(aoc200602)
+aoc(aoc200801)
+aoc(aoc200802)
+aoc(aoc200901)
+aoc(aoc200902)
 aoc(y15day0101)
 aoc(y15day0102)
 aoc(aoc150201)
 aoc(aoc150202)
 aoc(aoc150301)
 aoc(aoc150302)
+#aoc(aoc150401)
+aoc(aoc150501)
+aoc(aoc150601)
+aoc(aoc150602)
+aoc(aoc150801)
+aoc(aoc150802)
+aoc(aoc151101)
+aoc(aoc151401)
+
 
