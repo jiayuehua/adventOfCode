@@ -31,7 +31,7 @@ int main(int argc, char **argv)
       }) | views::common;
       std::string s = gb.front();
 
-      std::string inter = std::reduce(gb.begin(), gb.end(), s, [](std::string_view l, std::string_view r) {
+      std::string inter = std::reduce(gb.begin(), gb.end(), s, [](const std::string &l, const std::string &r) {
         std::string str;
         ranges::set_intersection(l, r, std::back_inserter(str));
         return str;
