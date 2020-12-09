@@ -29,7 +29,8 @@ int main(int argc, char **argv)
     auto seatNum = views::all(v) | views::transform([&a](auto &&i) {
       std::string s = "0000000111";
       ranges::transform(i, s.begin(), [&a](char c) {
-        return a[c];
+        auto ci = static_cast<std::size_t>(c);
+        return a[ci];
       });
       int n = std::stoi(s, 0, 2);
       return n;

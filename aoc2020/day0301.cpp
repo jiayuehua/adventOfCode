@@ -22,8 +22,8 @@ int main(int argc, char **argv)
     std::istream_iterator<std::string> ie;
     std::move(ib, ie, std::back_inserter(v));
     auto nv = views::all(v) | views::enumerate | views::transform([](auto &&i) { 
-      int linenum = std::get<0>(i);
-      int colnum=linenum*3;
+      auto linenum = std::get<0>(i);
+      auto colnum=linenum*3;
       std::string_view sv = std::get<1>(i);
       if (sv[colnum % sv.size()] == '#') {
         return true;

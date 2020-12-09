@@ -3,7 +3,6 @@
 # https://github.com/lefticus/cppbestpractices/blob/master/02-Use_the_Tools_Available.md
 
 function(set_project_warnings project_name)
-  option(WARNINGS_AS_ERRORS "Treat compiler warnings as errors" FALSE)
 
   set(MSVC_WARNINGS
       /W4 # Baseline reasonable warnings
@@ -49,11 +48,6 @@ function(set_project_warnings project_name)
       -Wformat=2 # warn on security issues around functions that format output (ie printf)
   )
 
-  if(WARNINGS_AS_ERRORS)
-    set(CLANG_WARNINGS ${CLANG_WARNINGS} -Werror)
-    set(MSVC_WARNINGS ${MSVC_WARNINGS} /WX)
-  endif()
-
   set(GCC_WARNINGS
       ${CLANG_WARNINGS}
       -Wmisleading-indentation # warn if indentation implies blocks where blocks do not exist
@@ -62,17 +56,13 @@ function(set_project_warnings project_name)
       -Wlogical-op # warn about logical operations being used where bitwise were probably wanted
       -Wuseless-cast # warn if you perform a cast to the same type
   )
-
-  if(MSVC)
-    set(PROJECT_WARNINGS ${MSVC_WARNINGS})
-  elseif(CMAKE_CXX_COMPILER_ID MATCHES ".*Clang")
-    set(PROJECT_WARNINGS ${CLANG_WARNINGS})
-  elseif(CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
-    set(PROJECT_WARNINGS ${GCC_WARNINGS})
-  else()
-    message(AUTHOR_WARNING "No compiler warnings set for '${CMAKE_CXX_COMPILER_ID}' compiler.")
-  endif()
-
-  target_compile_options(${project_name} INTERFACE ${PROJECT_WARNINGS})
+set(gcc_like_cxx "$<COMPILE_LANG_AND_ID:CXX,GNU>")
+set(clang_like_cxx "$<COMPILE_LANG_AND_ID:CXX,ARMClang,AppleClang,Clang>")
+set(msvc_cxx "$<COMPILE_LANG_AND_ID:CXX,MSVC>")
+target_compile_options(${project_name} INTERFACE
+  "$<${clang_like_cxx}:$<BUILD_INTERFACE:${CLANG_WARNINGS}>>"
+  "$<${gcc_like_cxx}:$<BUILD_INTERFACE:${GCC_WARNINGS}>>"
+  "$<${msvc_cxx}:$<BUILD_INTERFACE:${MSVC_WARNINGS}>>"
+)
 
 endfunction()

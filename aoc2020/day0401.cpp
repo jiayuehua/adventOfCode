@@ -50,7 +50,7 @@ bool pid(const std::string &s) noexcept
   return s.size() == 9 && (ranges::count_if(s, [](char c) { return std::isdigit(c); }) == 9);
 }
 
-bool cid(const std::string &s) noexcept
+bool cid(const std::string &) noexcept
 {
   return false;
 }

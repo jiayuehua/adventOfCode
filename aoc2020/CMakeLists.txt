@@ -4,7 +4,8 @@ find_package(TBB CONFIG REQUIRED)
 function(aoc arg)
 # Generic test that uses conan libs
 add_executable(${arg} "${arg}.cpp")
-
+find_package(Threads MODULE REQUIRED)
+#target_link_libraries(my_app PRIVATE Threads::Threads)
 #    find_path(CONSTEXPR_INCLUDE_DIRS "cx_algorithm.h")
 #    target_include_directories(${arg} PRIVATE ${CONSTEXPR_INCLUDE_DIRS})
 
@@ -17,6 +18,7 @@ target_include_directories(${arg} PRIVATE
 target_link_libraries(
   ${arg} PRIVATE project_options project_warnings 
                   range-v3 range-v3-meta range-v3::meta range-v3-concepts fmt::fmt-header-only TBB::tbb
+                  Threads::Threads
                    )
                    endfunction()
 aoc(day0101)

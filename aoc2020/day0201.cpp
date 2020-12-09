@@ -21,23 +21,22 @@ int main(int argc, char **argv)
     std::vector<std::string> v;
     std::move(ib, ie, std::back_inserter(v));
 
-    int n = 0;
-    auto s = views::all(v)
-             | views::chunk(3) | views::transform([](auto &&range) {
-                 std::array<std::string, 3> a;
-                 for (int i = 0; auto &&s : range) {
-                   a[i] = s;
-                   ++i;
-                 }
-                 std::istringstream ist(a[0]);
-                 int l, r;
-                 ist >> l >> r;
-                 r = -r;
-                 char c = a[1][0];
-                 int n = ranges::count(a[2], c);
-                 return (l <= n && n <= r);
-               });
-    int r = ranges::count(s, true);
+    auto vb = views::all(v)
+              | views::chunk(3) | views::transform([](auto &&range) {
+                  std::array<std::string, 3> a;
+                  for (std::size_t i = 0; auto &&s : range) {
+                    a[i] = s;
+                    ++i;
+                  }
+                  std::istringstream ist(a[0]);
+                  int l, r;
+                  ist >> l >> r;
+                  r = -r;
+                  char c = a[1][0];
+                  int m = static_cast<int>(ranges::count(a[2], c));
+                  return (l <= m && m <= r);
+                });
+    auto r = ranges::count(vb, true);
     fmt::print("{}\n", r);
     return 0;
   }

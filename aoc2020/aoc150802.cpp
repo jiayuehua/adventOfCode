@@ -5,10 +5,9 @@
 #include <string_view>
 
 namespace views = ranges::views;
-int escapelen(std::string_view sv)
+auto escapelen(std::string_view sv)
 {
-  int n = 0;
-  n += ranges::count(sv, '\\') + ranges::count(sv, '\"');
+  auto n = ranges::count(sv, '\\') + ranges::count(sv, '\"');
   n += 2;
   return n;
 }
@@ -20,7 +19,7 @@ int main(int argc, char **argv)
     std::string s;
     int n = 0;
     while (std::getline(ifs, s)) {
-      n += escapelen(s);
+      n += static_cast<int>(escapelen(s));
     }
     fmt::print("{}\n", n);
   }

@@ -25,22 +25,23 @@ int main(int argc, char **argv)
     auto nv = views::all(v) | views::enumerate | views::transform([](auto &&i) {
       std::array<int, 4> res;
       for (auto n : { 1, 3, 5, 7 }) {
-        int linenum = std::get<0>(i);
-        int colnum = linenum * n;
+        auto linenum = static_cast<std::size_t>(std::get<0>(i));
+        auto m = static_cast<std::size_t>(n);
+        auto colnum = linenum * m;
         std::string_view sv = std::get<1>(i);
-        res[n / 2] = sv[colnum % sv.size()] == '#';
+        res[m / 2] = sv[colnum % sv.size()] == '#';
       }
       return res;
     });
     std::int64_t sum = 1;
-    for (int n = 0; n < 4; ++n) {
-      int t = ranges::count_if(nv, [n](auto array) { return array[n] == true; });
+    for (std::size_t n = 0; n < 4; ++n) {
+      auto t = ranges::count_if(nv, [n](auto arr) { return arr[n] == true; });
       fmt::print("{}\n", t);
       sum *= t;
     }
     auto nvb = views::all(v) | views::enumerate | views::stride(2) | views::transform([](auto &&i) {
-      int n = 1;
-      int linenum = std::get<0>(i);
+      //int n = 1;
+      auto linenum = std::get<0>(i);
       std::string_view sv = std::get<1>(i);
       return sv[linenum % sv.size()] == '#';
     });

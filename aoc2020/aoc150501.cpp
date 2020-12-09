@@ -24,13 +24,13 @@ int main(int argc, char **argv)
     std::move(ib, ie, std::back_inserter(v));
     static bool vowols[256]{};
     ranges::fill(vowols, false);
-    vowols['a'] = true;
-    vowols['e'] = true;
-    vowols['i'] = true;
-    vowols['o'] = true;
-    vowols['u'] = true;
+    vowols[static_cast<std::size_t>('a')] = true;
+    vowols[static_cast<std::size_t>('e')] = true;
+    vowols[static_cast<std::size_t>('i')] = true;
+    vowols[static_cast<std::size_t>('o')] = true;
+    vowols[static_cast<std::size_t>('u')] = true;
     auto bitset = views::all(v) | views::transform([](const std::string &s) {
-      bool ca = ranges::count_if(s, [](char c) {
+      bool ca = ranges::count_if(s, [](int c) {
         return vowols[c];
       }) > 2;
       bool cb = ranges::adjacent_find(s, [](char a, char b) { return a == b; }) != s.end();

@@ -19,16 +19,15 @@ int main(int argc, char **argv)
     std::istream_iterator<std::string> ie;
     std::move(ib, ie, std::back_inserter(v));
 
-    int n = 0;
     auto s = views::all(v)
              | views::chunk(3) | views::transform([](auto &&range) {
                  std::array<std::string, 3> a;
-                 for (int i = 0; auto &&s : range) {
-                   a[i] = s;
+                 for (std::size_t i = 0; auto &&str : range) {
+                   a[i] = str;
                    ++i;
                  }
                  std::istringstream ist(a[0]);
-                 int l, r;
+                 std::size_t l, r;
                  ist >> l >> r;
                  r = -r;
                  char c = a[1][0];
@@ -36,7 +35,7 @@ int main(int argc, char **argv)
                  //int n = ranges::count(a[2], c);
                  //return (l <= n && n <= r);
                });
-    int r = ranges::count(s, true);
+    auto r = ranges::count(s, true);
     fmt::print("{}\n", r);
     return 0;
   }

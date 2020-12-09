@@ -27,7 +27,8 @@ int main(int argc, char **argv)
                   | views::transform([](auto &&s) {
                       std::array<bool, 256> count{};
                       ranges::for_each(s, [&count](std::string_view sv) {
-                        ranges::for_each(sv, [&count](char c) { count[c] = true; });
+                        ranges::for_each(sv, [&count](char c) { auto ci = static_cast<std::size_t>(c);
+                          count[ci] = true; });
                       });
                       return ranges::count(count, true);
                     });

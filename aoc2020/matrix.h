@@ -30,7 +30,7 @@ class Slice_iter
 
   std::valarray<T> *v = nullptr;
   std::slice s;
-  std::size_t curr = 0;// index of current element
+  int curr = 0;// index of current element
 
   T &ref(std::size_t i) const { return (*v)[s.start() + i * s.stride()]; }
 
@@ -53,7 +53,7 @@ public:
   Slice_iter end() const
   {
     Slice_iter t = *this;
-    t.curr = s.size();// index of last-plus-one element
+    t.curr = static_cast<int>(s.size());// index of last-plus-one element
     return t;
   }
 
@@ -79,28 +79,28 @@ public:
     curr--;
     return t;
   }
-  Slice_iter &operator+=(std::size_t n)
+  Slice_iter &operator+=(int n)
   {
     curr += n;
     return *this;
   }
-  Slice_iter &operator-=(std::size_t n)
+  Slice_iter &operator-=(int n)
   {
     curr -= n;
     return *this;
   }
-  Slice_iter operator+(std::size_t n) const
+  Slice_iter operator+(int n) const
   {
     Slice_iter tmp(*this);
     tmp += n;
     return tmp;
   }
-  friend Slice_iter operator+(std::size_t n, Slice_iter i)
+  friend Slice_iter operator+(int n, Slice_iter i)
   {
     return i + n;
   }
 
-  Slice_iter operator-(std::size_t n) const
+  Slice_iter operator-(int n) const
   {
     Slice_iter tmp(*this);
     tmp -= n;
@@ -113,52 +113,45 @@ public:
 
   T &operator[](std::size_t i) { return ref(i); }// C style subscript
   T &operator()(std::size_t i) { return ref(i); }// Fortran-style subscript
-  T &operator*() { return ref(curr); }// current element
+  T &operator*() { return ref(static_cast<std::size_t>(curr)); }// current element
   const T &operator[](std::size_t i) const { return ref(i); }// C style subscript
   const T &operator()(std::size_t i) const { return ref(i); }// Fortran-style subscript
   const T &operator*() const { return ref(curr); }// current element
 
-  friend bool operator==<>(const Slice_iter &p, const Slice_iter &q);
-  friend bool operator!=<>(const Slice_iter &p, const Slice_iter &q);
-  friend bool operator<(const Slice_iter &p, const Slice_iter &q);
+  friend bool operator==(const Slice_iter &p, const Slice_iter &q)
+  {
+    return p.curr == q.curr && p.s.stride() == q.s.stride() && p.s.start() == q.s.start();
+  }
+
+  friend bool operator!=(const Slice_iter &p, const Slice_iter &q)
+  {
+    return !(p == q);
+  }
+
+  friend bool operator<(const Slice_iter &p, const Slice_iter &q)
+  {
+    return p.curr < q.curr && p.s.stride() == q.s.stride() && p.s.start() == q.s.start();
+  }
 };
-
-template<class T>
-bool operator==(const Slice_iter<T> &p, const Slice_iter<T> &q)
-{
-  return p.curr == q.curr && p.s.stride() == q.s.stride() && p.s.start() == q.s.start();
-}
-
-template<class T>
-bool operator!=(const Slice_iter<T> &p, const Slice_iter<T> &q)
-{
-  return !(p == q);
-}
-
-template<class T>
-bool operator<(const Slice_iter<T> &p, const Slice_iter<T> &q)
-{
-  return p.curr < q.curr && p.s.stride() == q.s.stride() && p.s.start() == q.s.start();
-}
 
 //-------------------------------------------------------------
 
 // forward declarations to allow friend declarations:
-template<class T>
-class Cslice_iter;
-template<class T>
-bool operator==(const Cslice_iter<T> &, const Cslice_iter<T> &);
-template<class T>
-bool operator!=(const Cslice_iter<T> &, const Cslice_iter<T> &);
-template<class T>
-bool operator<(const Cslice_iter<T> &, const Cslice_iter<T> &);
+//template<class T>
+//class Cslice_iter;
+//template<class T>
+//bool operator==(const Cslice_iter<T> &, const Cslice_iter<T> &);
+//template<class T>
+//bool operator!=(const Cslice_iter<T> &, const Cslice_iter<T> &);
+//template<class T>
+//bool operator<(const Cslice_iter<T> &, const Cslice_iter<T> &);
 
 template<class T>
 class Cslice_iter
 {
   const std::valarray<T> *v = nullptr;
   std::slice s;
-  std::size_t curr = 0;// index of current element
+  int curr = 0;// index of current element
   const T &ref(std::size_t i) const { return (*v)[s.start() + i * s.stride()]; }
 
 public:
@@ -172,7 +165,7 @@ public:
   Cslice_iter end() const
   {
     Cslice_iter t = *this;
-    t.curr = s.size();// index of one plus last element
+    t.curr = static_cast<int>(s.size());// index of one plus last element
     return t;
   }
   Cslice_iter begin() const
@@ -203,28 +196,28 @@ public:
     curr--;
     return t;
   }
-  Cslice_iter &operator+=(std::size_t n)
+  Cslice_iter &operator+=(int n)
   {
     curr += n;
     return *this;
   }
-  Cslice_iter &operator-=(std::size_t n)
+  Cslice_iter &operator-=(int n)
   {
     curr -= n;
     return *this;
   }
-  Cslice_iter operator+(std::size_t n) const
+  Cslice_iter operator+(int n) const
   {
     Cslice_iter tmp(*this);
     tmp += n;
     return tmp;
   }
-  friend Cslice_iter operator+(std::size_t n, Cslice_iter i)
+  friend Cslice_iter operator+(int n, Cslice_iter i)
   {
     return i + n;
   }
 
-  Cslice_iter operator-(std::size_t n) const
+  Cslice_iter operator-(int n) const
   {
     Cslice_iter tmp(*this);
     tmp -= n;
@@ -238,36 +231,31 @@ public:
 
   const T &operator[](std::size_t i) const { return ref(i); }
   const T &operator()(std::size_t i) const { return ref(i); }
-  const T &operator*() const { return ref(curr); }
+  const T &operator*() const { return ref(static_cast<std::size_t>(curr)); }
 
-  friend bool operator==<>(const Cslice_iter &p, const Cslice_iter &q);
-  friend bool operator!=<>(const Cslice_iter &p, const Cslice_iter &q);
-  friend bool operator<(const Cslice_iter &p, const Cslice_iter &q);
+  friend bool operator==(const Cslice_iter &p, const Cslice_iter &q)
+  {
+    return p.curr == q.curr && p.s.stride() == q.s.stride() && p.s.start() == q.s.start();
+  }
+
+  friend bool operator!=(const Cslice_iter &p, const Cslice_iter &q)
+  {
+    return !(p == q);
+  }
+
+  friend bool operator<(const Cslice_iter &p, const Cslice_iter &q)
+  {
+    return p.curr < q.curr && p.s.stride() == q.s.stride() && p.s.start() == q.s.start();
+  }
 };
 
-template<class T>
-bool operator==(const Cslice_iter<T> &p, const Cslice_iter<T> &q)
-{
-  return p.curr == q.curr && p.s.stride() == q.s.stride() && p.s.start() == q.s.start();
-}
-
-template<class T>
-bool operator!=(const Cslice_iter<T> &p, const Cslice_iter<T> &q)
-{
-  return !(p == q);
-}
-
-template<class T>
-bool operator<(const Cslice_iter<T> &p, const Cslice_iter<T> &q)
-{
-  return p.curr < q.curr && p.s.stride() == q.s.stride() && p.s.start() == q.s.start();
-}
 
 //-------------------------------------------------------------
 
-template<class T, class Plus = std::plus<>, class Mul = std::multiplies<>, T innerProductValue = 0>
+template<class T, class Plus = std::plus<>, class Mul = std::multiplies<>>
 class Matrix
 {
+  static inline constexpr T innerProductValue = T{};
   std::valarray<T> v;// stores elements by column as described in 22.4.5
   std::size_t d1 = 0, d2 = 0;// d1 == number of rows, d2 == number of columns
   Plus plus;
@@ -323,23 +311,23 @@ public:
   // alternative definition of m*v
 
 
-  //friend std::valarray<T> operator*(std::valarray<T> &vec, const Matrix &m)
-  //{
-  //  if (vec.size() != m.dim2()) std::cerr << "wrong number of elements in vec*m\n";
+  friend std::valarray<T> operator*(std::valarray<T> &vec, const Matrix &m)
+  {
+    if (vec.size() != m.dim2()) std::cerr << "wrong number of elements in vec*m\n";
 
-  //  std::valarray<T> res(m.dim1());
+    std::valarray<T> res(m.dim1());
 
-  //  for (std::size_t i = 0; i < m.dim1(); i++) {
-  //    const Cslice_iter<T> &ci = m.column(i);
-  //    res[i] = std::transform_reduce(std::execution::par_unseq, ci, ci.end(), &vec[0], innerProductValue, m.plus, m.multiplies);
-  //  }
-  //  return res;
-  //}
+    for (std::size_t i = 0; i < m.dim1(); i++) {
+      const Cslice_iter<T> &ci = m.column(i);
+      res[i] = std::transform_reduce(std::execution::par_unseq, ci, ci.end(), &vec[0], innerProductValue, m.plus, m.multiplies);
+    }
+    return res;
+  }
   Matrix operator*(const Matrix &m) const
   {
     Matrix r(dim2(), m.dim1());
-    for (std::size_t i = 0; i < dim2(); i++) {
-      for (std::size_t j = 0; j < dim1(); j++) {
+    for (int i = 0; i < dim2(); i++) {
+      for (int j = 0; j < dim1(); j++) {
         r(i, j) = std::transform_reduce(std::execution::par_unseq, row(i).begin(), row(i).end(), m.column(j).begin(), innerProductValue, plus, multiplies);
         fmt::format("{},", r(i, j));
       }
@@ -354,27 +342,37 @@ public:
   void clearslope()
   {
 
-    for (std::size_t i = 0; i < dim2(); i++) {
+    for (int i = 0; i < dim2(); i++) {
       (*this)(i, i) = innerProductValue;
     }
   }
   Matrix reverse() const
   {
     Matrix tmp(d2, d1);
-    for (std::size_t i = 0; i < dim2(); ++i) {
-      for (std::size_t j = 0; j < dim1(); ++j) {
+    for (int i = 0; i < dim2(); ++i) {
+      for (int j = 0; j < dim1(); ++j) {
         tmp(j, i) = (*this)(i, j);
       }
     }
     return tmp;
   }
 
-  //Matrix &operator*=(T d)
-  //{
-  //  (v) *= d;
-  //  return *this;
-  //}
-  friend std::ostream &operator<<(std::ostream &os, Matrix &m)
+  Matrix &operator*=(T d)
+  {
+    std::for_each(std::execution::par_unseq, std::begin(v), std::end(v), [this, d](auto &n) { n = this->multiplies(n, d); });
+    return *this;
+  }
+  Matrix operator*(T d) const
+  {
+    T tmp(*this);
+    tmp *= d;
+    return tmp;
+  }
+  friend Matrix operator*(T d, const Matrix &m)
+  {
+    return m * d;
+  }
+  friend std::ostream &operator<<(std::ostream &os, const Matrix &m)
   {
     for (std::size_t y = 0; y < m.dim2(); y++) {
       for (std::size_t x = 0; x < m.dim1(); x++) os << m[x][y] << "\t";
@@ -386,6 +384,6 @@ public:
 template<class T>
 std::ostream &operator<<(std::ostream &os, const std::valarray<T> &v)
 {
-  for (std::size_t i = 0; i < v.size(); ++i) os << '\t' << v[i];
+  for (std::size_t i = 0; i < v.size(); ++i) os << v[i] << '\t';
   return os;
 }

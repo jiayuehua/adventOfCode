@@ -24,12 +24,14 @@ public:
   Number &operator++()
   {
     char carry = 1;
-    int len = s.size();
-    for (int i = 0; i < len; ++i) {
-      char sum = s[len - 1 - i] + carry;
-      char c = (sum - 'a') % 26 + 'a';
-      carry = (sum - 'a') / 26;
-      s[len - 1 - i] = c;
+    auto len = s.size();
+    for (std::size_t i = 0; i < (len); ++i) {
+      auto index = (len - 1 - i);
+
+      char sum = s[index] + carry;
+      char c = static_cast<char>((sum - 'a') % 26 + 'a');
+      carry = static_cast<char>((sum - 'a') / 26);
+      s[index] = c;
     }
     if (carry == 1) {
       s = 'b' + s;
@@ -67,10 +69,9 @@ private:
 };
 
 
-int main(int argc, char **argv)
+int main()
 {
   Number n("hxbxwxba");
-  int i = 0;
   for (; !n; ++n) {
   }
   ++n;

@@ -14,7 +14,7 @@ struct Instuction
 {
   bool not_runed_ = true;
   std::string op_;
-  int opand_;
+  std::size_t opand_;
 };
 
 
@@ -23,7 +23,6 @@ int main(int argc, char **argv)
   if (argc > 1) {
     std::ifstream ifs(argv[1]);
     std::string s;
-    std::size_t index = 0;
     std::vector<Instuction> v;
 
     while (std::getline(ifs, s)) {
@@ -32,7 +31,7 @@ int main(int argc, char **argv)
       iss >> instruct.op_ >> instruct.opand_;
       v.push_back(std::move(instruct));
     }
-    for (int k = 0; k < v.size(); ++k) {
+    for (std::size_t k = 0; k < v.size(); ++k) {
       std::string oldop;
       if (v[k].op_ == "jmp") {
         oldop = std::exchange(v[k].op_, "nop");
@@ -41,8 +40,8 @@ int main(int argc, char **argv)
       } else {
         continue;
       }
-      int acc = 0;
-      int i = 0;
+      std::size_t acc = 0;
+      std::size_t i = 0;
       for (; v[i].not_runed_ && i < v.size();) {
         v[i].not_runed_ = false;
         if (v[i].op_ == "nop") {

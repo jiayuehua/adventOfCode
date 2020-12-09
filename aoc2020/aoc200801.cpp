@@ -14,7 +14,7 @@ struct Instuction
 {
   bool not_runed_ = true;
   std::string op_;
-  int opand_;
+  std::size_t opand_;
 };
 
 
@@ -23,7 +23,6 @@ int main(int argc, char **argv)
   if (argc > 1) {
     std::ifstream ifs(argv[1]);
     std::string s;
-    std::size_t index = 0;
     std::vector<Instuction> v;
 
     while (std::getline(ifs, s)) {
@@ -32,9 +31,9 @@ int main(int argc, char **argv)
       iss >> instruct.op_ >> instruct.opand_;
       v.push_back(std::move(instruct));
     }
-    int acc = 0;
-    int i = 0;
-    for (; v[i].not_runed_ && i < v.size();) {
+    std::size_t acc = 0;
+
+    for (std::size_t i = 0; v[i].not_runed_ && i < v.size();) {
       v[i].not_runed_ = false;
       if (v[i].op_ == "nop") {
         ++i;

@@ -19,7 +19,6 @@ int main(int argc, char **argv)
   if (argc > 1) {
     std::ifstream ifs(argv[1]);
     std::vector<std::string> v;
-    std::string s;
     v.reserve(1000);
     std::istream_iterator<std::string> ib(ifs);
     std::istream_iterator<std::string> ie;
@@ -33,9 +32,9 @@ int main(int argc, char **argv)
       std::string s = gb.front();
 
       std::string inter = std::reduce(gb.begin(), gb.end(), s, [](std::string_view l, std::string_view r) {
-        std::string s;
-        ranges::set_intersection(l, r, std::back_inserter(s));
-        return s;
+        std::string str;
+        ranges::set_intersection(l, r, std::back_inserter(str));
+        return str;
       });
       return inter.size();
     });

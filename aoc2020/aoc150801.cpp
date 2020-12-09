@@ -36,7 +36,7 @@ int main(int argc, char **argv)
     std::string s;
     int n = 0;
     while (std::getline(ifs, s)) {
-      n += s.size() - escapelen(s);
+      n += static_cast<int>(s.size()) - escapelen(s);
     }
     fmt::print("{}\n", n);
   }

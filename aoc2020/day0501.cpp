@@ -29,7 +29,8 @@ int main(int argc, char **argv)
       fmt::print("{}\n", i.size());
       std::string s = "0000000111";
       ranges::transform(i, s.begin(), [&a](char c) {
-        return a[c];
+        auto ci = static_cast<std::size_t>(c);
+        return a[ci];
       });
       int n = std::stoi(s, 0, 2);
       return n;

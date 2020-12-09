@@ -35,7 +35,7 @@ int main(int argc, char **argv)
       v.begin(),
       v.end(),
       0,
-      [](int l, int r) { return l + r; },
+      [](int l, int rhs) { return l + rhs; },
       [](const std::string &s) {
         int x, y, z;
         std::sscanf(static_cast<const char *const>(s.c_str()), "%dx%dx%d", &x, &y, &z);
