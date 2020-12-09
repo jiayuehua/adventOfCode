@@ -8,17 +8,6 @@
 #include <numeric>
 #include <string>
 #include <execution>
-struct Box
-{
-  int x;
-  int y;
-  int z;
-  constexpr int area() const noexcept
-  {
-    return 2 * (x * y + y * z + x * z);
-  }
-  auto operator<=>(const Box &) const = default;
-};
 namespace views = ranges::views;
 
 int main(int argc, char **argv)

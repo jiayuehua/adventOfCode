@@ -17,7 +17,6 @@ struct Box
   {
     return 2 * (x * y + y * z + x * z);
   }
-  auto operator<=>(const Box &) const = default;
 };
 namespace views = ranges::views;
 
