@@ -10,8 +10,6 @@
 #include <numeric>
 #include <string>
 #include <execution>
-// Flattens a range of ranges by iterating the inner
-// ranges in round-robin fashion.
 
 int main(int argc, char **argv)
 {
@@ -33,7 +31,7 @@ int main(int argc, char **argv)
 
       std::string inter = std::reduce(gb.begin(), gb.end(), s, [](const std::string &l, const std::string &r) {
         std::string str;
-        ranges::set_intersection(l, r, std::back_inserter(str));
+        ranges::set_intersection(l.cbegin(), l.cend(), r.cbegin(), r.cend(), std::back_inserter(str));
         return str;
       });
       return inter.size();
