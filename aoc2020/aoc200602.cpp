@@ -10,6 +10,7 @@
 #include <numeric>
 #include <string>
 #include <execution>
+#include <algorithm>
 
 int main(int argc, char **argv)
 {
@@ -31,7 +32,7 @@ int main(int argc, char **argv)
 
       std::string inter = std::reduce(gb.begin(), gb.end(), s, [](const std::string &l, const std::string &r) {
         std::string str;
-        ranges::set_intersection(l.cbegin(), l.cend(), r.cbegin(), r.cend(), std::back_inserter(str));
+        std::set_intersection(l.cbegin(), l.cend(), r.cbegin(), r.cend(), std::back_inserter(str));
         return str;
       });
       return inter.size();
