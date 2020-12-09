@@ -57,8 +57,8 @@ int main(int argc, char **argv)
         m(colorid[subbag], colorid[bag.color_]) = true;
       }
     }
-    Mat b(m.dim2(), m.dim1());
-    for (auto i : views::ints | views::take(m.dim2())) {
+    Mat b(m.rowCount(), m.colCount());
+    for (auto i : views::ints | views::take(m.rowCount())) {
       m(i, i) = true;
       b(i, i) = true;
     }
@@ -68,7 +68,7 @@ int main(int argc, char **argv)
     auto mn = std::count(m.row(shinybagid).begin(), m.row(shinybagid).end(), true);
     fmt::print("{}\n", mn - 1);
     //Mat r = m * tmp;
-    std::vector<Mat> vm(m.dim2() - 1, tmp);
+    std::vector<Mat> vm(m.rowCount() - 1, tmp);
     auto r = std::reduce(std::execution::par_unseq, vm.begin(), vm.end(), m, std::multiplies{});
     auto n = std::count(r.row(shinybagid).begin(), r.row(shinybagid).end(), true);
     fmt::print("{}\n", n - 1);

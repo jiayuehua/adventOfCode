@@ -75,8 +75,8 @@ void path()
   mc.clearslope();
   mc = mc * mb;
   mc.clearslope();
-  for (auto i : views::ints | views::take(mc.dim1())) {
-    for (auto j : views::ints | views::take(mc.dim1())) {
+  for (auto i : views::ints | views::take(mc.colCount())) {
+    for (auto j : views::ints | views::take(mc.colCount())) {
       fmt::print("{},", mc(i, j));
     }
     fmt::print("\n");

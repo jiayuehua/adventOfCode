@@ -50,5 +50,7 @@ aoc(aoc150801)
 aoc(aoc150802)
 aoc(aoc151101)
 aoc(aoc151401)
+aoc(aoc151501)
+aoc(aoc151502)
 
 

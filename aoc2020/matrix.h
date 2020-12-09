@@ -257,14 +257,14 @@ class Matrix
 {
   static inline constexpr T innerProductValue = T{};
   std::valarray<T> v;// stores elements by column as described in 22.4.5
-  std::size_t d1 = 0, d2 = 0;// d1 == number of rows, d2 == number of columns
+  std::size_t colnum_ = 0, rownum_ = 0;// colnum_ == number of cols, rownum_ == number of rows
   Plus plus;
   Mul multiplies;
 
 public:
-  std::size_t size() const { return d1 * d2; }
-  std::size_t dim1() const { return d1; }
-  std::size_t dim2() const { return d2; }
+  std::size_t size() const { return colnum_ * rownum_; }
+  std::size_t colCount() const { return colnum_; }
+  std::size_t rowCount() const { return rownum_; }
 
   Slice_iter<T> operator()(std::size_t i) { return row(i); }
   Cslice_iter<T> operator()(std::size_t i) const { return row(i); }
@@ -274,20 +274,20 @@ public:
 
 
   std::valarray<T> &array() { return v; }
-  inline Slice_iter<T> row(std::size_t i) { return Slice_iter<T>(&v, std::slice(i, d1, d2)); }
+  inline Slice_iter<T> row(std::size_t i) { return Slice_iter<T>(&v, std::slice(i, colnum_, rownum_)); }
 
-  inline Cslice_iter<T> row(std::size_t i) const { return Cslice_iter<T>(&v, std::slice(i, d1, d2)); }
+  inline Cslice_iter<T> row(std::size_t i) const { return Cslice_iter<T>(&v, std::slice(i, colnum_, rownum_)); }
 
-  inline Slice_iter<T> column(std::size_t i) { return Slice_iter<T>(&v, std::slice(i * d2, d2, 1)); }
+  inline Slice_iter<T> column(std::size_t i) { return Slice_iter<T>(&v, std::slice(i * rownum_, rownum_, 1)); }
 
-  inline Cslice_iter<T> column(std::size_t i) const { return Cslice_iter<T>(&v, std::slice(i * d2, d2, 1)); }
+  inline Cslice_iter<T> column(std::size_t i) const { return Cslice_iter<T>(&v, std::slice(i * rownum_, rownum_, 1)); }
 
   Matrix() {}
   Matrix(std::size_t x, std::size_t y) : v(innerProductValue, x * y)
   {
     // check that x and y are sensible
-    d1 = x;
-    d2 = y;
+    rownum_ = x;
+    colnum_ = y;
   }
 
 
@@ -299,10 +299,10 @@ public:
 
   std::valarray<T> operator*(const std::valarray<T> &vec) const
   {
-    if (dim1() != vec.size()) std::cerr << "wrong number of elements in m*vec\n";
+    if (colCount() != vec.size()) std::cerr << "wrong number of elements in m*vec\n";
 
-    std::valarray<T> res(dim2());
-    for (std::size_t i = 0; i < dim2(); i++) {
+    std::valarray<T> res(rowCount());
+    for (std::size_t i = 0; i < rowCount(); i++) {
       res[i] = std::transform_reduce(std::execution::par_unseq, row(i).begin(), row(i).end(), &vec[0], innerProductValue, plus, multiplies);
     }
     return res;
@@ -313,11 +313,11 @@ public:
 
   friend std::valarray<T> operator*(std::valarray<T> &vec, const Matrix &m)
   {
-    if (vec.size() != m.dim2()) std::cerr << "wrong number of elements in vec*m\n";
+    if (vec.size() != m.rowCount()) std::cerr << "wrong number of elements in vec*m\n";
 
-    std::valarray<T> res(m.dim1());
+    std::valarray<T> res(m.colCount());
 
-    for (std::size_t i = 0; i < m.dim1(); i++) {
+    for (std::size_t i = 0; i < m.colCount(); i++) {
       const Cslice_iter<T> &ci = m.column(i);
       res[i] = std::transform_reduce(std::execution::par_unseq, ci, ci.end(), &vec[0], innerProductValue, m.plus, m.multiplies);
     }
@@ -325,9 +325,9 @@ public:
   }
   Matrix operator*(const Matrix &m) const
   {
-    Matrix r(dim2(), m.dim1());
-    for (int i = 0; i < dim2(); i++) {
-      for (int j = 0; j < dim1(); j++) {
+    Matrix r(rowCount(), m.colCount());
+    for (int i = 0; i < rowCount(); i++) {
+      for (int j = 0; j < colCount(); j++) {
         r(i, j) = std::transform_reduce(std::execution::par_unseq, row(i).begin(), row(i).end(), m.column(j).begin(), innerProductValue, plus, multiplies);
         fmt::format("{},", r(i, j));
       }
@@ -342,15 +342,15 @@ public:
   void clearslope()
   {
 
-    for (int i = 0; i < dim2(); i++) {
+    for (int i = 0; i < rowCount(); i++) {
       (*this)(i, i) = innerProductValue;
     }
   }
   Matrix reverse() const
   {
-    Matrix tmp(d2, d1);
-    for (int i = 0; i < dim2(); ++i) {
-      for (int j = 0; j < dim1(); ++j) {
+    Matrix tmp(rownum_, colnum_);
+    for (int i = 0; i < rowCount(); ++i) {
+      for (int j = 0; j < colCount(); ++j) {
         tmp(j, i) = (*this)(i, j);
       }
     }
@@ -374,8 +374,8 @@ public:
   }
   friend std::ostream &operator<<(std::ostream &os, const Matrix &m)
   {
-    for (std::size_t y = 0; y < m.dim2(); y++) {
-      for (std::size_t x = 0; x < m.dim1(); x++) os << m[x][y] << "\t";
+    for (std::size_t y = 0; y < m.rowCount(); y++) {
+      for (std::size_t x = 0; x < m.colCount(); x++) os << m(y, x) << "\t";
       os << "\n";
     }
     return os;
