@@ -1,5 +1,6 @@
 find_package(range-v3 CONFIG REQUIRED)
 find_package(fmt CONFIG REQUIRED)
+find_package(TBB CONFIG REQUIRED)
 function(aoc arg)
 # Generic test that uses conan libs
 add_executable(${arg} "${arg}.cpp")
@@ -15,7 +16,7 @@ target_include_directories(${arg} PRIVATE
            )
 target_link_libraries(
   ${arg} PRIVATE project_options project_warnings 
-                  range-v3 range-v3-meta range-v3::meta range-v3-concepts fmt::fmt-header-only
+                  range-v3 range-v3-meta range-v3::meta range-v3-concepts fmt::fmt-header-only TBB::tbb
                    )
                    endfunction()
 aoc(day0101)
