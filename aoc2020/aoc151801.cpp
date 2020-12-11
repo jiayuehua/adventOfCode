@@ -21,11 +21,12 @@ public:
   {
     return std::count(std::execution::par_unseq, std::begin(mcurr_.array()), std::end(mcurr_.array()), true);
   }
-  LightMatrix(int n) : mcurr_(n, n), mnext_(n, n) {}
+  LightMatrix(std::size_t n) : mnext_(n, n), mcurr_(n, n) {}
   void transform() noexcept
   {
-    auto indexs = (views::ints | views::take(mcurr_.rowCount() - 1) | views::drop(1));
-    std::vector<int> v(mcurr_.rowCount() - 2);
+    std::size_t start = 0;
+    auto indexs = (views::iota(start) | views::take(mcurr_.rowCount() - 1) | views::drop(1));
+    std::vector<std::size_t> v(mcurr_.rowCount() - 2);
     ranges::copy(indexs, v.begin());
     std::for_each(std::execution::par_unseq, v.begin(), v.end(), [this, &v](auto i) {
       std::for_each(std::execution::par_unseq, v.begin(), v.end(), [this, i](auto j) {
@@ -53,26 +54,14 @@ int main(int argc, char **argv)
 {
   if (argc > 1) {
     std::ifstream ifs(argv[1]);
-    char c;
     std::string s;
     LightMatrix lm(102);
 
-    std::ostream_iterator<bool> ost;
-    for (int j = 0; (ifs >> s); ++j) {
-      //fmt::print("s:{}={}\n", s.size(), j);
-      std::transform(s.begin(), s.end(), lm.mcurr_.row(j + 1).begin() + 1, [j](char c) { return c == '#'; });
-      //      std::copy(lm.mcurr_.column(j + 1).begin(), lm.mcurr_.column(j + 1).end(), ost);
-      //for (int i = 0; i < 8; ++i) {
-      //  std::cout << lm.mcurr_(i, j + 1);
-      //}
-      //fmt::print("====  \n");
-      //fmt::print("columnj+1 size:{} \n", lm.mcurr_.column(j + 1).size());
-      //std::cout << std::endl;
+    for (std::size_t j = 0; (ifs >> s); ++j) {
+      std::transform(s.begin(), s.end(), lm.mcurr_.row(j + 1).begin() + 1, [](char c) { return c == '#'; });
     }
-    //std::cout << lm.mcurr_ << std::endl;
-    for (auto i : (views::ints | views::take(100))) {
+    ranges::for_each(views::ints | views::take(100), [&lm](int) {
       lm.transform();
-    }
-    std::cout << lm.count() << std::endl;
+    });
   }
 }
