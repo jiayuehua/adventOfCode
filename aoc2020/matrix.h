@@ -49,6 +49,10 @@ public:
     t.curr = 0;// index of last-plus-one element
     return t;
   }
+  constexpr auto size() const noexcept
+  {
+    return s.size();
+  }
 
   Slice_iter end() const
   {
@@ -274,6 +278,7 @@ public:
 
 
   std::valarray<T> &array() { return v; }
+  const std::valarray<T> &array() const { return v; }
   inline Slice_iter<T> row(std::size_t i) { return Slice_iter<T>(&v, std::slice(i, colnum_, rownum_)); }
 
   inline Cslice_iter<T> row(std::size_t i) const { return Cslice_iter<T>(&v, std::slice(i, colnum_, rownum_)); }
