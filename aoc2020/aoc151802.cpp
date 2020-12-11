@@ -57,7 +57,6 @@ int main(int argc, char **argv)
     std::string s;
     LightMatrix lm(102);
 
-    std::ostream_iterator<bool> ost;
     for (int j = 0; (ifs >> s); ++j) {
       std::transform(s.begin(), s.end(), lm.mcurr_.row(j + 1).begin() + 1, [j](char c) { return c == '#'; });
     }
