@@ -27,12 +27,10 @@ int main(int argc, char **argv)
       auto [first, second] = ranges::mismatch(
         s.cbegin() + 2, s.cend(), s.cbegin(), s.cend() - 2, [](char a, char b) { return a != b; });
       bool ca = (first != s.cend());
-      auto capos = first - s.cbegin();
 
-      auto dupstrpos = views::ints | views::take(s.size() - 3) | views::transform([ca, capos, begin = s.c_str(), end = s.c_str() + s.size()](int i) {
+      auto dupstrpos = views::ints | views::take(s.size() - 3) | views::transform([begin = s.c_str(), end = s.c_str() + s.size()](int i) {
         std::string_view l(begin + i, 2);
-        std::string_view r(begin + i + 2, end);
-        std::string_view s(begin, end);
+        std::string_view r(begin + i + 2, end - (begin + i + 2));
         return r.find(l) != r.npos;
       });
       return ca && (ranges::find(dupstrpos, true) != dupstrpos.end());
