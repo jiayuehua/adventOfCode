@@ -25,26 +25,17 @@ int main(int argc, char **argv)
     std::move(ib, ie, std::back_inserter(v));
     auto bitset = views::all(v) | views::transform([](const std::string &s) {
       auto [first, second] = ranges::mismatch(
-        s.begin() + 2, s.end(), s.begin(), s.end() - 2, [](char a, char b) { return a != b; });
-      bool ca = (first != s.end());
-      //if (ca) {
-      //  fmt::print("ca:{}{}\n", s, first - s.begin());
-      //}
+        s.cbegin() + 2, s.cend(), s.cbegin(), s.cend() - 2, [](char a, char b) { return a != b; });
+      bool ca = (first != s.cend());
+      auto capos = first - s.cbegin();
 
-      auto dupstrpos = views::ints | views::take(s.size() - 4) | views::transform([begin = s.c_str(), end = s.c_str() + s.size()](int i) {
+      auto dupstrpos = views::ints | views::take(s.size() - 3) | views::transform([ca, capos, begin = s.c_str(), end = s.c_str() + s.size()](int i) {
         std::string_view l(begin + i, 2);
         std::string_view r(begin + i + 2, end);
         std::string_view s(begin, end);
-        if (r.find(l) != r.npos) {
-          fmt::print("{},l={},r={}\n", s, l, r);
-        }
         return r.find(l) != r.npos;
       });
-      auto cb = (ranges::find(dupstrpos, true) != dupstrpos.end());
-      //if (ca and cb) {
-      //  fmt::print("ca:{}\n", s);
-      //}
-      return ca and cb;
+      return ca && (ranges::find(dupstrpos, true) != dupstrpos.end());
     });
     auto n = ranges::count(bitset, true);
     fmt::print("{}\n", n);
