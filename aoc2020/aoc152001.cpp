@@ -6,7 +6,7 @@
 
 namespace views = ranges::views;
 
-constexpr int getdivisor(int n) noexcept
+int getdivisor(int n) noexcept
 {
   int sum = 0;
   for (int i = 1; i <= sqrt(n); ++i) {
