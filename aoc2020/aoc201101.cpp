@@ -51,11 +51,11 @@ public:
   bool transform() noexcept
   {
     std::for_each(std::execution::par_unseq, vr_.begin(), vr_.end(), [this](auto i) {
-      std::for_each(std::execution::par_unseq, vc_.begin(), vc_.end(), [t = this, i](auto j) {
-        if (Occupied == t->mcurr_(i, j) && t->surroundOccupiedNum(i, j) >= 4) {
-          t->mnext_(i, j) = Empty;
-        } else if (Empty == t->mcurr_(i, j) && t->surroundOccupiedNum(i, j) == 0) {
-          t->mnext_(i, j) = Occupied;
+      std::for_each(std::execution::par_unseq, vc_.begin(), vc_.end(), [this, i](auto j) {
+        if (Occupied == this->mcurr_(i, j) && this->surroundOccupiedNum(i, j) >= 4) {
+          this->mnext_(i, j) = Empty;
+        } else if (Empty == this->mcurr_(i, j) && this->surroundOccupiedNum(i, j) == 0) {
+          this->mnext_(i, j) = Occupied;
         }
       });
     });

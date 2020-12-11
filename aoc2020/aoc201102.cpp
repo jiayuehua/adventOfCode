@@ -69,10 +69,10 @@ public:
   {
     std::for_each(std::execution::par_unseq, vr_.begin(), vr_.end(), [this](auto i) {
       std::for_each(std::execution::par_unseq, vc_.begin(), vc_.end(), [this, i](auto j) {
-        if (Occupied == mcurr_(i, j) && surroundOccupiedNum(i, j) >= 5) {
-          mnext_(i, j) = Empty;
-        } else if (Empty == mcurr_(i, j) && surroundOccupiedNum(i, j) == 0) {
-          mnext_(i, j) = Occupied;
+        if (Occupied == this->mcurr_(i, j) && this->surroundOccupiedNum(i, j) >= 5) {
+          this->mnext_(i, j) = Empty;
+        } else if (Empty == this->mcurr_(i, j) && this->surroundOccupiedNum(i, j) == 0) {
+          this->mnext_(i, j) = Occupied;
         }
       });
     });
