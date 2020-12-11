@@ -256,6 +256,140 @@ public:
 
 //-------------------------------------------------------------
 
+template<class T, std::size_t rownum_, std::size_t colnum_ = rownum_, class Plus = std::plus<>, class Mul = std::multiplies<>>
+class FixedMatrix
+{
+  static inline constexpr T innerProductValue = T{};
+  std::valarray<T> v;// stores elements by column as described in 22.4.5
+  //std::size_t colnum_ = 0, rownum_ = 0;// colnum_ == number of cols, rownum_ == number of rows
+  Plus plus;
+  Mul multiplies;
+
+public:
+  std::size_t size() const { return colnum_ * rownum_; }
+  std::size_t colCount() const { return colnum_; }
+  std::size_t rowCount() const { return rownum_; }
+
+  Slice_iter<T> operator()(std::size_t i) { return row(i); }
+  Cslice_iter<T> operator()(std::size_t i) const { return row(i); }
+
+  Slice_iter<T> operator[](std::size_t i) { return row(i); }// C-style subscript
+  Cslice_iter<T> operator[](std::size_t i) const { return row(i); }
+
+
+  std::valarray<T> &array() { return v; }
+  const std::valarray<T> &array() const { return v; }
+  inline Slice_iter<T> row(std::size_t i) { return Slice_iter<T>(&v, std::slice(i, colnum_, rownum_)); }
+
+  inline Cslice_iter<T> row(std::size_t i) const { return Cslice_iter<T>(&v, std::slice(i, colnum_, rownum_)); }
+
+  inline Slice_iter<T> column(std::size_t i) { return Slice_iter<T>(&v, std::slice(i * rownum_, rownum_, 1)); }
+
+  inline Cslice_iter<T> column(std::size_t i) const { return Cslice_iter<T>(&v, std::slice(i * rownum_, rownum_, 1)); }
+
+  FixedMatrix() : v(innerProductValue, rownum_ * colnum_) {}
+  bool operator==(FixedMatrix r) const noexcept
+  {
+    return std::equal(std::execution::par_unseq, std::begin(v), std::end(v), std::begin(r.v));
+  }
+  bool operator!=(FixedMatrix r) const noexcept
+  {
+    return !(*this == r);
+  }
+
+  T &operator()(std::size_t x, std::size_t y) { return row(x)[y]; }
+  const T &operator()(std::size_t x, std::size_t y) const { return row(x)[y]; }
+
+  //-------------------------------------------------------------
+
+
+  std::valarray<T> operator*(const std::valarray<T> &vec) const
+  {
+    if (colCount() != vec.size()) std::cerr << "wrong number of elements in m*vec\n";
+
+    std::valarray<T> res(rowCount());
+    for (std::size_t i = 0; i < rowCount(); i++) {
+      res[i] = std::transform_reduce(std::execution::par_unseq, row(i).begin(), row(i).end(), &vec[0], innerProductValue, plus, multiplies);
+    }
+    return res;
+  }
+
+  // alternative definition of m*v
+
+
+  friend std::valarray<T> operator*(std::valarray<T> &vec, const FixedMatrix &m)
+  {
+    if (vec.size() != m.rowCount()) std::cerr << "wrong number of elements in vec*m\n";
+
+    std::valarray<T> res(m.colCount());
+
+    for (std::size_t i = 0; i < m.colCount(); i++) {
+      const Cslice_iter<T> &ci = m.column(i);
+      res[i] = std::transform_reduce(std::execution::par_unseq, ci, ci.end(), &vec[0], innerProductValue, m.plus, m.multiplies);
+    }
+    return res;
+  }
+  FixedMatrix operator*(const FixedMatrix &m) const
+  {
+    FixedMatrix r(rowCount(), m.colCount());
+    for (int i = 0; i < rowCount(); i++) {
+      for (int j = 0; j < colCount(); j++) {
+        r(i, j) = std::transform_reduce(std::execution::par_unseq, row(i).begin(), row(i).end(), m.column(j).begin(), innerProductValue, plus, multiplies);
+        fmt::format("{},", r(i, j));
+      }
+      fmt::format("\n");
+    }
+    return r;
+  }
+  FixedMatrix &operator*=(const FixedMatrix &m)
+  {
+    return *this = (*this) * m;
+  }
+  void clearslope()
+  {
+
+    for (int i = 0; i < rowCount(); i++) {
+      (*this)(i, i) = innerProductValue;
+    }
+  }
+  FixedMatrix reverse() const
+  {
+    FixedMatrix tmp(rownum_, colnum_);
+    for (int i = 0; i < rowCount(); ++i) {
+      for (int j = 0; j < colCount(); ++j) {
+        tmp(j, i) = (*this)(i, j);
+      }
+    }
+    return tmp;
+  }
+
+  FixedMatrix &operator*=(T d)
+  {
+    std::for_each(std::execution::par_unseq, std::begin(v), std::end(v), [this, d](auto &n) { n = this->multiplies(n, d); });
+    return *this;
+  }
+  FixedMatrix operator*(T d) const
+  {
+    T tmp(*this);
+    tmp *= d;
+    return tmp;
+  }
+  friend FixedMatrix operator*(T d, const FixedMatrix &m)
+  {
+    return m * d;
+  }
+  friend std::ostream &operator<<(std::ostream &os, const FixedMatrix &m)
+  {
+    static char seat[] = { '.',
+      'L',
+      '#' };
+    for (std::size_t y = 0; y < m.rowCount(); y++) {
+      for (std::size_t x = 0; x < m.colCount(); x++) os << seat[m(y, x)];
+      os << "\n";
+    }
+    return os;
+  }
+};
 template<class T, class Plus = std::plus<>, class Mul = std::multiplies<>>
 class Matrix
 {
