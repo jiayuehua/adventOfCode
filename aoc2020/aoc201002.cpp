@@ -35,17 +35,14 @@ int main(int argc, char **argv)
     std::ifstream ifs(argv[1]);
     int i;
     std::vector<int> v;
-    v.reserve(500);
+    v.reserve(50);
     while (ifs >> i) {
       v.push_back(i);
     }
     std::vector<int> vd(v);
     ranges::sort(v);
     ranges::adjacent_difference(v, vd.begin());
-    std::ostream_iterator<int> ost(std::cout, ",");
     vd.push_back(3);
-    ranges::copy(vd, ost);
-    fmt::print(" \n");
     Fibonacci f;
     f.vd_ = std::move(vd);
     fmt::print("{}\n", f.get());
