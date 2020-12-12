@@ -16,7 +16,7 @@ enum {
 };
 
 namespace views = ranges::views;
-template<std::size_t RowCnt, std::size_t ColCnt>
+template<int RowCnt, int ColCnt>
 struct LightMatrix
 {
 public:

@@ -117,7 +117,7 @@ public:
 
   T &operator[](int i) { return ref(i); }// C style subscript
   T &operator()(int i) { return ref(i); }// Fortran-style subscript
-  T &operator*() { return ref(static_cast<int>(curr)); }// current element
+  T &operator*() { return ref(curr); }// current element
   const T &operator[](int i) const { return ref(i); }// C style subscript
   const T &operator()(int i) const { return ref(i); }// Fortran-style subscript
   const T &operator*() const { return ref(curr); }// current element

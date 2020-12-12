@@ -28,7 +28,7 @@ public:
     for (std::size_t i = 0; i < (len); ++i) {
       auto index = (len - 1 - i);
 
-      char sum = s[index] + carry;
+      char sum = static_cast<char>(s[index] + carry);
       char c = static_cast<char>((sum - 'a') % 26 + 'a');
       carry = static_cast<char>((sum - 'a') / 26);
       s[index] = c;
