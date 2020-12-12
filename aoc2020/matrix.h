@@ -32,7 +32,7 @@ class Slice_iter
   std::slice s;
   int curr = 0;// index of current element
 
-  T &ref(std::size_t i) const { return (*v)[s.start() + i * s.stride()]; }
+  T &ref(int i) const { return (*v)[s.start() + static_cast<std::size_t>(i) * s.stride()]; }
 
 public:
   using value_type = T;
@@ -115,11 +115,11 @@ public:
     return this->curr - j.curr;
   }
 
-  T &operator[](std::size_t i) { return ref(i); }// C style subscript
-  T &operator()(std::size_t i) { return ref(i); }// Fortran-style subscript
-  T &operator*() { return ref(static_cast<std::size_t>(curr)); }// current element
-  const T &operator[](std::size_t i) const { return ref(i); }// C style subscript
-  const T &operator()(std::size_t i) const { return ref(i); }// Fortran-style subscript
+  T &operator[](int i) { return ref(i); }// C style subscript
+  T &operator()(int i) { return ref(i); }// Fortran-style subscript
+  T &operator*() { return ref(static_cast<int>(curr)); }// current element
+  const T &operator[](int i) const { return ref(i); }// C style subscript
+  const T &operator()(int i) const { return ref(i); }// Fortran-style subscript
   const T &operator*() const { return ref(curr); }// current element
 
   friend bool operator==(const Slice_iter &p, const Slice_iter &q)
@@ -156,7 +156,7 @@ class Cslice_iter
   const std::valarray<T> *v = nullptr;
   std::slice s;
   int curr = 0;// index of current element
-  const T &ref(std::size_t i) const { return (*v)[s.start() + i * s.stride()]; }
+  const T &ref(int i) const { return (*v)[s.start() + static_cast<std::size_t>(i) * s.stride()]; }
 
 public:
   using value_type = T;
@@ -233,9 +233,9 @@ public:
            - j.curr;
   }
 
-  const T &operator[](std::size_t i) const { return ref(i); }
-  const T &operator()(std::size_t i) const { return ref(i); }
-  const T &operator*() const { return ref(static_cast<std::size_t>(curr)); }
+  const T &operator[](int i) const { return ref(i); }
+  const T &operator()(int i) const { return ref(i); }
+  const T &operator*() const { return ref(curr); }
 
   friend bool operator==(const Cslice_iter &p, const Cslice_iter &q)
   {
@@ -256,7 +256,7 @@ public:
 
 //-------------------------------------------------------------
 
-template<class T, std::size_t rownum_, std::size_t colnum_ = rownum_, class Plus = std::plus<>, class Mul = std::multiplies<>>
+template<class T, int rownum_, int colnum_ = rownum_, class Plus = std::plus<>, class Mul = std::multiplies<>>
 class FixedMatrix
 {
   static inline constexpr T innerProductValue = T{};
@@ -267,25 +267,25 @@ class FixedMatrix
 
 public:
   std::size_t size() const { return colnum_ * rownum_; }
-  std::size_t colCount() const { return colnum_; }
-  std::size_t rowCount() const { return rownum_; }
+  int colCount() const { return colnum_; }
+  int rowCount() const { return rownum_; }
 
-  Slice_iter<T> operator()(std::size_t i) { return row(i); }
-  Cslice_iter<T> operator()(std::size_t i) const { return row(i); }
+  Slice_iter<T> operator()(int i) { return row(i); }
+  Cslice_iter<T> operator()(int i) const { return row(i); }
 
-  Slice_iter<T> operator[](std::size_t i) { return row(i); }// C-style subscript
-  Cslice_iter<T> operator[](std::size_t i) const { return row(i); }
+  Slice_iter<T> operator[](int i) { return row(i); }// C-style subscript
+  Cslice_iter<T> operator[](int i) const { return row(i); }
 
 
   std::valarray<T> &array() { return v; }
   const std::valarray<T> &array() const { return v; }
-  inline Slice_iter<T> row(std::size_t i) { return Slice_iter<T>(&v, std::slice(i, colnum_, rownum_)); }
+  inline Slice_iter<T> row(int i) { return Slice_iter<T>(&v, std::slice(static_cast<std::size_t>(i), colnum_, rownum_)); }
 
-  inline Cslice_iter<T> row(std::size_t i) const { return Cslice_iter<T>(&v, std::slice(i, colnum_, rownum_)); }
+  inline Cslice_iter<T> row(int i) const { return Cslice_iter<T>(&v, std::slice(static_cast<std::size_t>(i), colnum_, rownum_)); }
 
-  inline Slice_iter<T> column(std::size_t i) { return Slice_iter<T>(&v, std::slice(i * rownum_, rownum_, 1)); }
+  inline Slice_iter<T> column(int i) { return Slice_iter<T>(&v, std::slice(i * rownum_, rownum_, 1)); }
 
-  inline Cslice_iter<T> column(std::size_t i) const { return Cslice_iter<T>(&v, std::slice(i * rownum_, rownum_, 1)); }
+  inline Cslice_iter<T> column(int i) const { return Cslice_iter<T>(&v, std::slice(i * rownum_, rownum_, 1)); }
 
   FixedMatrix() : v(innerProductValue, rownum_ * colnum_) {}
   bool operator==(FixedMatrix r) const noexcept
@@ -297,8 +297,8 @@ public:
     return !(*this == r);
   }
 
-  T &operator()(std::size_t x, std::size_t y) { return row(x)[y]; }
-  const T &operator()(std::size_t x, std::size_t y) const { return row(x)[y]; }
+  T &operator()(int x, int y) { return row(x)[y]; }
+  const T &operator()(int x, int y) const { return row(x)[y]; }
 
   //-------------------------------------------------------------
 
@@ -380,11 +380,8 @@ public:
   }
   friend std::ostream &operator<<(std::ostream &os, const FixedMatrix &m)
   {
-    static char seat[] = { '.',
-      'L',
-      '#' };
     for (std::size_t y = 0; y < m.rowCount(); y++) {
-      for (std::size_t x = 0; x < m.colCount(); x++) os << seat[m(y, x)];
+      for (std::size_t x = 0; x < m.colCount(); x++) os << m(y, x);
       os << "\n";
     }
     return os;
@@ -395,34 +392,35 @@ class Matrix
 {
   static inline constexpr T innerProductValue = T{};
   std::valarray<T> v;// stores elements by column as described in 22.4.5
-  std::size_t colnum_ = 0, rownum_ = 0;// colnum_ == number of cols, rownum_ == number of rows
+  int colnum_ = 0, rownum_ = 0;// colnum_ == number of cols, rownum_ == number of rows
   Plus plus;
   Mul multiplies;
 
 public:
-  std::size_t size() const { return colnum_ * rownum_; }
-  std::size_t colCount() const { return colnum_; }
-  std::size_t rowCount() const { return rownum_; }
+  std::size_t size() const { return static_cast<std::size_t>(colnum_ * rownum_); }
+  int colCount() const { return colnum_; }
+  int rowCount() const { return rownum_; }
 
-  Slice_iter<T> operator()(std::size_t i) { return row(i); }
-  Cslice_iter<T> operator()(std::size_t i) const { return row(i); }
+  Slice_iter<T> operator()(int i) { return row(i); }
+  Cslice_iter<T> operator()(int i) const { return row(i); }
 
-  Slice_iter<T> operator[](std::size_t i) { return row(i); }// C-style subscript
-  Cslice_iter<T> operator[](std::size_t i) const { return row(i); }
+  Slice_iter<T> operator[](int i) { return row(i); }// C-style subscript
+  Cslice_iter<T> operator[](int i) const { return row(i); }
 
 
   std::valarray<T> &array() { return v; }
   const std::valarray<T> &array() const { return v; }
-  inline Slice_iter<T> row(std::size_t i) { return Slice_iter<T>(&v, std::slice(i, colnum_, rownum_)); }
+  inline Slice_iter<T> row(int i) { return Slice_iter<T>(&v, std::slice(static_cast<std::size_t>(i), static_cast<std::size_t>(colnum_), static_cast<std::size_t>(rownum_))); }
 
-  inline Cslice_iter<T> row(std::size_t i) const { return Cslice_iter<T>(&v, std::slice(i, colnum_, rownum_)); }
 
-  inline Slice_iter<T> column(std::size_t i) { return Slice_iter<T>(&v, std::slice(i * rownum_, rownum_, 1)); }
+  inline Cslice_iter<T> row(int i) const { return Cslice_iter<T>(&v, std::slice(static_cast<std::size_t>(i), static_cast<std::size_t>(colnum_), static_cast<std::size_t>(rownum_))); }
 
-  inline Cslice_iter<T> column(std::size_t i) const { return Cslice_iter<T>(&v, std::slice(i * rownum_, rownum_, 1)); }
+  inline Slice_iter<T> column(int i) { return Slice_iter<T>(&v, std::slice(static_cast<std::size_t>(i) * static_cast<std::size_t>(rownum_), static_cast<std::size_t>(rownum_), 1)); }
+
+  inline Cslice_iter<T> column(int i) const { return Cslice_iter<T>(&v, std::slice(static_cast<std::size_t>(i) * static_cast<std::size_t>(rownum_), static_cast<std::size_t>(rownum_), 1)); }
 
   Matrix() {}
-  Matrix(std::size_t x, std::size_t y) : v(innerProductValue, x * y)
+  Matrix(int x, int y) : v(innerProductValue, static_cast<std::size_t>(x * y))
   {
     // check that x and y are sensible
     rownum_ = x;
@@ -430,8 +428,8 @@ public:
   }
 
 
-  T &operator()(std::size_t x, std::size_t y) { return row(x)[y]; }
-  const T &operator()(std::size_t x, std::size_t y) const { return row(x)[y]; }
+  T &operator()(int x, int y) { return row(x)[y]; }
+  const T &operator()(int x, int y) const { return row(x)[y]; }
 
   //-------------------------------------------------------------
 
@@ -513,8 +511,8 @@ public:
   }
   friend std::ostream &operator<<(std::ostream &os, const Matrix &m)
   {
-    for (std::size_t y = 0; y < m.rowCount(); y++) {
-      for (std::size_t x = 0; x < m.colCount(); x++) os << m(y, x) << "\t";
+    for (auto y = 0; y < m.rowCount(); y++) {
+      for (auto x = 0; x < m.colCount(); x++) os << m(y, x) << "\t";
       os << "\n";
     }
     return os;

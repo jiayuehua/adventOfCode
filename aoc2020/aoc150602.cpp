@@ -82,7 +82,7 @@
 //  g(3, 4);
 //  g(4, 3);
 //}
-void turnon(Matrix<int> &a, std::size_t sx, std::size_t sy, std::size_t ex, std::size_t ey) noexcept
+void turnon(Matrix<int> &a, int sx, int sy, int ex, int ey) noexcept
 {
   for (auto i = sx; i < ex; ++i) {
     for (auto j = sy; j < ey; ++j) {
@@ -91,14 +91,14 @@ void turnon(Matrix<int> &a, std::size_t sx, std::size_t sy, std::size_t ex, std:
   }
 }
 
-void turnoff(Matrix<int> &a, std::size_t sx, std::size_t sy, std::size_t ex, std::size_t ey) noexcept
+void turnoff(Matrix<int> &a, int sx, int sy, int ex, int ey) noexcept
 {
   for (auto i = sx; i < ex; ++i) {
     for (auto j = sy; j < ey; ++j)
       a(i, j) = std::max(a(i, j) - 1, 0);
   }
 }
-void toggle(Matrix<int> &a, std::size_t sx, std::size_t sy, std::size_t ex, std::size_t ey) noexcept
+void toggle(Matrix<int> &a, int sx, int sy, int ex, int ey) noexcept
 {
   for (auto i = sx; i < ex; ++i) {
     for (auto j = sy; j < ey; ++j)
@@ -122,7 +122,7 @@ int main(int argc, char **argv)
     std::istream_iterator<std::string> ie;
     std::move(ib, ie, std::back_inserter(v));
     Matrix<int> pa(1000, 1000);
-    typedef void (*Action)(Matrix<int> &, std::size_t sx, std::size_t sy, std::size_t ex, std::size_t xy) noexcept;
+    typedef void (*Action)(Matrix<int> &, int sx, int sy, int ex, int xy) noexcept;
 
     static Action actions[] = {
       turnoff,
@@ -134,7 +134,7 @@ int main(int argc, char **argv)
     ranges::for_each(v, [&pa](const std::string &str) mutable {
       std::istringstream ist(str);
       int action;
-      std::size_t sx, sy, ex, ey;
+      int sx, sy, ex, ey;
       std::string ignore;
       ist >> action >> sx >> sy >> ignore >> ex >> ey;
       (actions[action])(pa, sx, sy, ex + 1, ey + 1);

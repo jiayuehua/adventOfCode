@@ -7,7 +7,7 @@
 namespace views = ranges::views;
 int min() noexcept
 {
-  int sz = 3600000;
+  std::size_t sz = 3600000;
   auto indexs = views::ints | views::drop(1) | views::take(sz);
   std::vector<int> va(sz);
   std::vector<int> v(sz);

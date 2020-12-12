@@ -22,7 +22,7 @@ struct Fibonacci
     vr_[0] = 1;
     vr_[1] = 1 + ((vd_[0] + vd_[1]) <= 3);
     vr_[2] = vr_[1] + ((vd_[0] + vd_[1] + vd_[2]) <= 3) + ((vd_[1] + vd_[2]) <= 3) * vr_[0];
-    for (int i = 3; i < vd_.size(); ++i) {
+    for (std::size_t i = 3; i < vd_.size(); ++i) {
       vr_[i] = vr_[i - 1] + ((vd_[i - 1] + vd_[i]) <= 3) * vr_[i - 2] + ((vd_[i] + vd_[i - 2] + vd_[i - 1]) <= 3) * vr_[i - 3];
     }
     return vr_.back();

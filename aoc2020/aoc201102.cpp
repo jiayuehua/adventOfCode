@@ -27,16 +27,16 @@ struct LightMatrix
   Direction d_[8] = { { 0, -1 }, { -1, -1 }, { -1, 0 }, { -1, 1 }, { 0, 1 }, { 1, 1 }, { 1, 0 }, { 1, -1 } };
   bool validpos(int i, int j) const noexcept
   {
-    return (i >= 0) && (i < RowCnt) && (j >= 0) && (j < ColCnt);
+    return (i >= 0) && (i < static_cast<int>(RowCnt)) && (j >= 0) && (j < static_cast<int>(ColCnt));
   }
 
-  bool occupied(std::size_t i, std::size_t j, Direction d) const noexcept
+  bool occupied(int i, int j, Direction d) const noexcept
   {
-    for (i += d.x_, j += d.y_; validpos(i, j) && mcurr_(i, j) != Empty && mcurr_(i, j) != Occupied; i += d.x_, j += d.y_) {
+    for (i += d.x_, j += d.y_; validpos(i, j) && mcurr_((i), (j)) != Empty && mcurr_((i), (j)) != Occupied; i += d.x_, j += d.y_) {
     }
-    return validpos(i, j) && mcurr_(i, j) == Occupied;
+    return validpos(i, j) && mcurr_((i), (j)) == Occupied;
   }
-  int surroundOccupiedNum(std::size_t i, std::size_t j) const noexcept
+  int surroundOccupiedNum(int i, int j) const noexcept
   {
     int cnt = 0;
     for (int k = 0; k < 8; ++k) {
@@ -45,14 +45,19 @@ struct LightMatrix
     return cnt;
   }
 
-  std::vector<std::size_t> vr_;
-  std::vector<std::size_t> vc_;
 
 public:
+  FixedMatrix<int, RowCnt, ColCnt> mcurr_;
   FixedMatrix<int, RowCnt, ColCnt> mnext_;
+
+private:
+  std::vector<int> vr_;
+  std::vector<int> vc_;
+
+public:
   LightMatrix() noexcept
-    : vr_(mcurr_.rowCount() - 2),
-      vc_(mcurr_.colCount() - 2)
+    : vr_(static_cast<std::size_t>(mcurr_.rowCount() - 2)),
+      vc_(static_cast<std::size_t>(mcurr_.colCount() - 2))
   {
     std::size_t start = 0;
     auto indexs = views::iota(start) | views::drop(1) | views::take(mcurr_.rowCount() - 2);
@@ -60,11 +65,10 @@ public:
     ranges::copy(indexs, vr_.begin());
     ranges::copy(colindexs, vc_.begin());
   }
-  std::size_t count() noexcept
+  auto count() noexcept
   {
     return std::count(std::execution::par_unseq, std::begin(mcurr_.array()), std::end(mcurr_.array()), Occupied);
   }
-  FixedMatrix<int, RowCnt, ColCnt> mcurr_;
   bool transform() noexcept
   {
     std::for_each(std::execution::par_unseq, vr_.begin(), vr_.end(), [this](auto i) {
@@ -93,12 +97,12 @@ int main(int argc, char **argv)
     std::string s;
     LightMatrix<101, 94> lm;
     static char state[256];
-    state['.'] = Floor;
-    state['L'] = Empty;
-    state['#'] = Occupied;
 
-    for (std::size_t j = 0; (ifs >> s); ++j) {
-      std::transform(s.begin(), s.end(), lm.mcurr_.row(j + 1).begin() + 1, [](char c) { return state[c]; });
+    state[static_cast<int>('.')] = Floor;
+    state[static_cast<int>('L')] = Empty;
+    state[static_cast<int>('#')] = Occupied;
+    for (int j = 0; (ifs >> s); ++j) {
+      std::transform(s.begin(), s.end(), lm.mcurr_.row(j + 1).begin() + 1, [](char c) { return state[static_cast<int>(c)]; });
     }
     lm.mnext_ = lm.mcurr_;
     for (; !lm.transform();) {

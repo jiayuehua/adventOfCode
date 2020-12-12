@@ -24,7 +24,7 @@ int main(int argc, char **argv)
     std::string s;
     Matrix<int> m(4, 5);
     int t;
-    for (std::size_t i = 0; ifs >> s >> s >> t; ++i) {
+    for (int i = 0; ifs >> s >> s >> t; ++i) {
       fmt::print("{} ", t);
       s.clear();
       int row = i / 5;

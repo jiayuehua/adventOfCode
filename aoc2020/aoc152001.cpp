@@ -34,7 +34,7 @@ int min() noexcept
 }
 
 
-int main(int argc, char **argv)
+int main()
 {
   fmt::print("minindex:{}\n", min());
 }

@@ -30,7 +30,7 @@ int main(int argc, char **argv)
 
       auto dupstrpos = views::ints | views::take(s.size() - 3) | views::transform([begin = s.c_str(), end = s.c_str() + s.size()](int i) {
         std::string_view l(begin + i, 2);
-        std::string_view r(begin + i + 2, end - (begin + i + 2));
+        std::string_view r(begin + i + 2, static_cast<std::size_t>(end - (begin + i + 2)));
         return r.find(l) != r.npos;
       });
       return ca && (ranges::find(dupstrpos, true) != dupstrpos.end());

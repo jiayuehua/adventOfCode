@@ -26,12 +26,12 @@ int main(int argc, char **argv)
     ranges::adjacent_difference(v, vd.begin());
     vd.push_back(3);
 
-    int onescount = ranges::count(vd, 1);
+    auto onescount = ranges::count(vd, 1);
     fmt::print("{}\n", onescount);
     int max = ranges::max(vd);
     fmt::print("{}\n", max);
 
-    int threescount = ranges::count(vd, 3);
+    auto threescount = ranges::count(vd, 3);
     fmt::print("{}\n", threescount);
     fmt::print("{}\n", onescount * threescount);
   }

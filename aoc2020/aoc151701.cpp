@@ -37,7 +37,7 @@ private:
         if (n) {
           id_.push_back(n);
         }
-        sizevec_.push_back(id_.size());
+        sizevec_.push_back(static_cast<int>(id_.size()));
         //std::ostream_iterator<int> osi(std::cout, ",");
         //ranges::copy(id_, osi);
         if (n) {
@@ -67,7 +67,7 @@ public:
   {
     combinationCounts(0, sum);
     auto minit = ranges::min_element(sizevec_);
-    size_ = ranges::count(sizevec_, *minit);
+    size_ = static_cast<int>(ranges::count(sizevec_, *minit));
   }
   int count() const noexcept
   {

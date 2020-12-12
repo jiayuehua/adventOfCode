@@ -17,15 +17,15 @@ struct LightMatrix
 
 public:
   Matrix<bool> mcurr_;
-  std::size_t count() const noexcept
+  auto count() const noexcept
   {
     return std::count(std::execution::par_unseq, std::begin(mcurr_.array()), std::end(mcurr_.array()), true);
   }
-  LightMatrix(int n) : mcurr_(n, n), mnext_(n, n) {}
+  LightMatrix(int n) : mnext_(n, n), mcurr_(n, n) {}
   void transform() noexcept
   {
     auto indexs = (views::ints | views::take(mcurr_.rowCount() - 1) | views::drop(1));
-    std::vector<int> v(mcurr_.rowCount() - 2);
+    std::vector<int> v(std::size_t(mcurr_.rowCount() - 2));
     ranges::copy(indexs, v.begin());
     std::for_each(std::execution::par_unseq, v.begin(), v.end(), [this, &v](auto i) {
       std::for_each(std::execution::par_unseq, v.begin(), v.end(), [this, i](auto j) {
@@ -53,14 +53,14 @@ int main(int argc, char **argv)
 {
   if (argc > 1) {
     std::ifstream ifs(argv[1]);
-    char c;
     std::string s;
-    LightMatrix lm(102);
+    LightMatrix lm(102ul);
 
     for (int j = 0; (ifs >> s); ++j) {
-      std::transform(s.begin(), s.end(), lm.mcurr_.row(j + 1).begin() + 1, [j](char c) { return c == '#'; });
+      std::transform(s.begin(), s.end(), lm.mcurr_.row(j + 1).begin() + 1, [](char c) { return c == '#'; });
     }
     for (auto i : (views::ints | views::take(100))) {
+      (void)i;
       lm.transform();
     }
     std::cout << lm.count() << std::endl;
