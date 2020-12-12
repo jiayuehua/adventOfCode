@@ -12,7 +12,6 @@
 #include <iterator>
 #include <utility>
 #include <string_view>
-#include <iostream>
 #include <cctype>
 namespace views = ranges::views;
 namespace actions = ranges::actions;
@@ -34,11 +33,10 @@ public:
   auto count() noexcept
   {
     for (auto &&kv : kv_) {
-      fmt::print("kv:{},{}\n", kv.first, kv.second);
+      typedef std::pair<std::string::iterator, std::string::iterator> Pair;
 
-      std::vector<std::string_view> vs;
+      std::vector<Pair> vs;
       boost::algorithm::find_all(vs, s_, kv.first);
-      fmt::print("size:{}\n", vs.size());
       for (int i = 0; i < static_cast<int>(vs.size()); ++i) {
         std::string sc = algo::replace_nth_copy(s_, kv.first, i, kv.second);
         vs_.push_back(std::move(sc));
