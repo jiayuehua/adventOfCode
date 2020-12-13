@@ -27,7 +27,7 @@ struct LightMatrix
   Direction d_[8] = { { 0, -1 }, { -1, -1 }, { -1, 0 }, { -1, 1 }, { 0, 1 }, { 1, 1 }, { 1, 0 }, { 1, -1 } };
   bool validpos(int i, int j) const noexcept
   {
-    return (i >= 0) && (i < static_cast<int>(RowCnt)) && (j >= 0) && (j < static_cast<int>(ColCnt));
+    return (i >= 0) && (i < RowCnt) && (j >= 0) && (j < ColCnt);
   }
 
   bool occupied(int i, int j, Direction d) const noexcept

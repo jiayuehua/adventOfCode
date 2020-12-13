@@ -1,24 +1,10 @@
 #include <fstream>
-#include <sstream>
-#include <iostream>
-#include <iomanip>
 #include <fmt/format.h>
 #include <string>
-#include <numeric>
-#include <iomanip>
-#include <execution>
 #include <boost/algorithm/string.hpp>
-#include <range/v3/all.hpp>
-#include <iterator>
 #include <utility>
-#include <unordered_map>
-#include <string_view>
-#include <iostream>
-#include <cctype>
-#include <functional>
+#include <map>
 #include <limits>
-namespace views = ranges::views;
-namespace actions = ranges::actions;
 namespace algo = boost::algorithm;
 
 struct AllString
@@ -51,7 +37,6 @@ public:
 
           if (sc == "e") {
             mincount_ = std::min(steps_, mincount_);
-            //fmt::print("mincount_:{}\n", mincount_);
             break;
           } else {
             count(sc);
