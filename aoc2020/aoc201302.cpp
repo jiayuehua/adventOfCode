@@ -16,61 +16,48 @@ namespace views = ranges::views;
 
 struct TimeStamp
 {
-  static inline constexpr int64_t step_ = 29;
-  static inline int64_t start_ = 11l << 43;
-  static inline constexpr int64_t forwardsz_ = 1l << 27;
-  static inline constexpr std::pair<int64_t, int64_t> relativepos_[8] = {
-    { 13, 42 },
-    { 17, 43 },
-    { 19, 79 },
-    { 23, 52 },
-    { 37, 66 },
-    { 41, 19 },
-    { 521, 60 },
-    { 661, 29 }
+  static inline constexpr std::pair<int64_t, int64_t> relativepos_[] = {
+    { 13, 13 * 4 - 42 },
+    { 17, 17 * 3 - 43 },
+    { 19, 19 * 5 - 79 },
+    { 23, 23 * 3 - 52 },
+    { 37, 37 * 2 - 66 },
+    { 41, 41 - 19 },
+    { 521, 521 - 60 },
+    { 29, 0 },
+    { 661, 661 - 29 }
   };
-  //static inline constexpr int64_t step_ = 7;
-  //static inline int64_t start_ = 1l << 14;
-  //static inline constexpr int64_t forwardsz_ = 1l << 18;
-  //static inline constexpr std::pair<int64_t, int64_t> relativepos_[4] = {
-  //  { 13, 1 },
-  //  { 59, 4 },
-  //  { 31, 6 },
-  //  { 19, 7 }
-  //};
-
-  static constexpr int64_t valid(int64_t n) noexcept
+  static constexpr int64_t reverse(int64_t p, int64_t a) noexcept
   {
-    bool r = std::all_of(std::execution::unseq, std::begin(relativepos_), std::end(relativepos_), [n](auto pair) {
-      return ((n * step_ + pair.second) % pair.first) == 0l;
-    });
-    switch (r) {
-    case true:
-      return n * step_;
-    case false:
-      return std::numeric_limits<int64_t>::max();
-    }
-    return std::numeric_limits<int64_t>::max();
-  }
-
-  int64_t firstvalidtimestamp() noexcept
-  {
-    std::vector<int64_t> v(forwardsz_);
-
-    for (int64_t start = start_; start < std::numeric_limits<int64_t>::max(); start += forwardsz_) {
-      ranges::copy(views::ints(start_) | views::take(forwardsz_), v.begin());
-      auto r = std::transform_reduce(
-        std::execution::par_unseq, v.begin(), v.end(), std::numeric_limits<int64_t>::max(), [](int64_t l, int64_t r) { return std::min(l, r); }, [](int64_t i) { return valid(i); });
-
-      if (r != std::numeric_limits<int64_t>::max()) {
-        return r;
+    for (int i = 1; i < p; ++i) {
+      if ((a * i) % p == 1) {
+        return i;
       }
     }
-    return std::numeric_limits<int64_t>::max();
+    return 1;
+  }
+  static constexpr int64_t firstvalid() noexcept
+  {
+    int64_t sum = 0;
+
+    int64_t M = 1;
+    for (auto [p, a] : relativepos_) {
+      M *= p;
+    }
+    fmt::print("{}\n", M);
+
+    for (auto [p, a] : relativepos_) {
+      auto M0 = M / p;
+      auto m0 = (M0) % p;
+      auto t0 = reverse(p, m0);
+      fmt::print("M0:{},m0:{},t0:{},p:{}\n", M0, m0, t0, p);
+      sum += M0 * t0 * a;
+    }
+    return sum % M;
   }
 };
 int main()
 {
   TimeStamp ts;
-  fmt::print("firstvalid:{}\n", ts.firstvalidtimestamp());
+  fmt::print("firstvalid:{}\n", ts.firstvalid());
 }
