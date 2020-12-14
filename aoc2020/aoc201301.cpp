@@ -29,10 +29,7 @@ int main(int argc, char **argv)
     while (ifs >> busid) {
       v.push_back(busid);
     }
-    std::ostream_iterator<int> ost(std::cout, ",");
-    ranges::copy(v, ost);
 
-    fmt::print("=\n");
     int t = waittime(n, v);
     fmt::print("{}", t);
   }
