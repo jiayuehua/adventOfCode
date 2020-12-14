@@ -25,7 +25,7 @@ int main(int argc, char **argv)
     std::ifstream ifs(argv[1]);
     std::vector<int> v;
     int n = 1000677;
-    int busid, ignore;
+    int busid;
     while (ifs >> busid) {
       v.push_back(busid);
     }
