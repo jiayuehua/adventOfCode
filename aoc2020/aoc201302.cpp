@@ -44,13 +44,11 @@ struct TimeStamp
     for (auto [p, a] : relativepos_) {
       M *= p;
     }
-    fmt::print("{}\n", M);
 
     for (auto [p, a] : relativepos_) {
       auto M0 = M / p;
       auto m0 = (M0) % p;
       auto t0 = reverse(p, m0);
-      fmt::print("M0:{},m0:{},t0:{},p:{}\n", M0, m0, t0, p);
       sum += M0 * t0 * a;
     }
     return sum % M;
