@@ -5,6 +5,7 @@ function(aoc arg)
 # Generic test that uses conan libs
 add_executable(${arg} "${arg}.cpp")
 find_package(Threads MODULE REQUIRED)
+#find_package(folly CONFIG REQUIRED)
 #target_link_libraries(my_app PRIVATE Threads::Threads)
 #    find_path(CONSTEXPR_INCLUDE_DIRS "cx_algorithm.h")
 #    target_include_directories(${arg} PRIVATE ${CONSTEXPR_INCLUDE_DIRS})
@@ -18,8 +19,9 @@ target_include_directories(${arg} PRIVATE
 target_link_libraries(
   ${arg} PRIVATE project_options project_warnings 
                   range-v3 range-v3-meta range-v3::meta range-v3-concepts fmt::fmt-header-only TBB::tbb
-                  Threads::Threads
+                  Threads::Threads #Folly::folly Folly::folly_deps #Folly::follybenchmark Folly::folly_test_util
                    )
+
                    endfunction()
 #aoc(aoc150401)
 aoc(aoc200101)
@@ -72,3 +74,7 @@ aoc(aoc152001)
 aoc(aoc152002)
 aoc(aoc151901)
 aoc(aoc151902)
+#aoc(aoc151201)
+#aoc(aoc151202)
+aoc(aoc151301)
+aoc(aoc151302)
