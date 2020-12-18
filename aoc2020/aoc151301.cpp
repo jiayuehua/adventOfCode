@@ -8,7 +8,6 @@
 #include <iomanip>
 #include <boost/variant.hpp>
 #include <unordered_map>
-#include <range/v3/all.hpp>
 #include "combinations_algo.h"
 #include "matrix.h"
 struct Combinations

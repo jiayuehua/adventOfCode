@@ -381,7 +381,9 @@ public:
   friend std::ostream &operator<<(std::ostream &os, const FixedMatrix &m)
   {
     for (std::size_t y = 0; y < m.rowCount(); y++) {
-      for (std::size_t x = 0; x < m.colCount(); x++) os << m(y, x);
+      for (std::size_t x = 0; x < m.colCount(); x++) {
+        os << m(y, x) << ",";
+      }
       os << "\n";
     }
     return os;

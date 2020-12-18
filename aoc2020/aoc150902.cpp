@@ -14,19 +14,19 @@ struct Combinations
 {
   FixedMatrix<int, 8, 8> networks_;
   std::array<int, 8> a = { 0, 1, 2, 3, 4, 5, 6, 7 };
-  int min = std::numeric_limits<int>::max();
-  int min_distance() noexcept
+  int max = std::numeric_limits<int>::min();
+  int max_distance() noexcept
   {
     auto f = [this](auto b, auto e) {
       int s = 0;
       for (; b != e - 1; ++b) {
         s += networks_(*b, *(b + 1));
       }
-      min = std::min(s, min);
+      max = std::max(s, max);
       return false;
     };
     for_each_reversible_permutation(a.begin(), a.end(), a.end(), f);
-    return min;
+    return max;
   }
 };
 int main(int argc, char **argv)
@@ -50,6 +50,6 @@ int main(int argc, char **argv)
       }
     }
     std::cout << com.networks_ << std::endl;
-    std::cout << com.min_distance() << std::endl;
+    std::cout << com.max_distance() << std::endl;
   }
 }

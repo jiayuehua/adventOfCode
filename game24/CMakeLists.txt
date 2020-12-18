@@ -15,3 +15,6 @@ target_link_libraries(
                    aoc(game24)
                    aoc(aoc201801)
                    aoc(aoc201802)
+                   aoc(aoc201901)
+                   aoc(aoc201902)
+                   aoc(aoc161601)
