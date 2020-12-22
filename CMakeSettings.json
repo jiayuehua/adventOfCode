@@ -11,7 +11,7 @@
       "buildCommandArgs": "-v",
       "ctestCommandArgs": "",
       "clangTidyChecks": "*",
-            "codeAnalysisRuleset": "${projectDir}\\TutorialRuleset.ruleset",
+      "codeAnalysisRuleset": "${projectDir}\\TutorialRuleset.ruleset",
       "variables": []
     },
     {
@@ -25,7 +25,7 @@
       "ctestCommandArgs": "",
       "inheritEnvironments": [ "msvc_x86" ],
       "clangTidyChecks": "*",
-            "codeAnalysisRuleset": "${projectDir}\\TutorialRuleset.ruleset",
+      "codeAnalysisRuleset": "${projectDir}\\TutorialRuleset.ruleset",
       "variables": []
     },
     {
@@ -64,6 +64,21 @@
       "wslPath": "${defaultWSLPath}",
       "addressSanitizerRuntimeFlags": "detect_leaks=0",
       "clangTidyChecks": "*",
+      "variables": []
+    },
+    {
+      "name": "WSL-Clang-Release",
+      "generator": "Ninja",
+      "configurationType": "RelWithDebInfo",
+      "buildRoot": "${projectDir}\\out\\build\\${name}",
+      "installRoot": "${projectDir}\\out\\install\\${name}",
+      "cmakeExecutable": "cmake",
+      "cmakeCommandArgs": "",
+      "buildCommandArgs": "",
+      "ctestCommandArgs": "",
+      "inheritEnvironments": [ "linux_clang_x64" ],
+      "wslPath": "${defaultWSLPath}",
+      "addressSanitizerRuntimeFlags": "detect_leaks=0",
       "variables": []
     }
   ]
