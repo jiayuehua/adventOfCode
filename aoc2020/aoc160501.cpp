@@ -33,7 +33,7 @@ int main(int argc, char **argv)
 
     return std::pair{ ca, c };
   }) | views::filter([](auto pair) { return pair.first; })
-           | views::transform([](auto pair) { return pair.second; }) | views::take(8);
+           | views::values | views::take(8);
   for (auto i : v) {
     fmt::print("{}", i);
   }

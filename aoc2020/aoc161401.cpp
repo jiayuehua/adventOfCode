@@ -36,9 +36,7 @@ int main(int argc, char **argv)
   auto valid = [&vs](auto p) {
     auto s = p.first | views::sliding(3) | views::transform([p](auto v) { 
       auto uniq=ranges::adjacent_find(v, std::not_equal_to{}) == v.end();
-      return std::make_pair(uniq, v[0]); }) | views::filter([](auto pair) { return pair.first; }) | views::transform([](auto p) {
-      return p.second;
-    });
+      return std::make_pair(uniq, v[0]); }) | views::filter([](auto pair) { return pair.first; }) | views::values;
     std::string str(s.begin(), s.end());
     auto r = std::move(str) | ranges::actions::sort | ranges::actions::unique;
     for (auto c : r) {

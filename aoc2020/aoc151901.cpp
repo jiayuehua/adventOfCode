@@ -12,7 +12,6 @@
 #include <iterator>
 #include <utility>
 #include <string_view>
-#include <cctype>
 namespace views = ranges::views;
 namespace actions = ranges::actions;
 namespace algo = boost::algorithm;

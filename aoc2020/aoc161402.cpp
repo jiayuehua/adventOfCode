@@ -61,9 +61,7 @@ int main(int argc, char **argv)
   //fmt::print("s3:{}\n", p.first);
   //    }
 
-      return std::make_pair(uniq, v[0]); }) | views::filter([](auto pair) { return pair.first; }) | views::transform([](auto p) {
-      return p.second;
-    });
+      return std::make_pair(uniq, v[0]); }) | views::filter([](auto pair) { return pair.first; }) | views::values;
     std::string str(s.begin(), s.end());
     auto r = std::move(str) | ranges::actions::sort | ranges::actions::unique;
     for (auto c : r) {
