@@ -4,7 +4,6 @@
 #include <iostream>
 #include <iterator>
 #include <string>
-#include <boost/spirit/home/x3.hpp>
 #include <range/v3/all.hpp>
 #include <cstdint>
 #include <boost/circular_buffer.hpp>
@@ -72,34 +71,5 @@ int main()
   }
   c.findone();
   std::cout << c << std::endl;
-  return 0;
-  std::ostream_iterator<int> oit(std::cout, ",");
-  Ring r(5);
-  r.push_back(1);
-  r.push_back(2);
-  r.push_back(3);
-  r.push_back(4);
-  r.push_back(5);
-  std::cout << "r:";
-  ranges::copy(r, oit);
-  std::cout << "\n";
-  std::cout << "rpush:";
-  r.push_back(1);
-  r.push_back(2);
-  r.push_back(3);
-  r.push_back(4);
-  r.push_back(5);
-  r.push_back(1);
-  ranges::copy(r, oit);
-  std::cout << "\n";
-  std::cout << "array_one:";
-  auto [b, n] = r.array_one();
-  ranges::copy_n(b, n, oit);
-  std::cout << "\n";
-  std::cout << "array_two:";
-
-  auto [tb, tn] = r.array_two();
-  ranges::copy_n(tb, tn, oit);
-  std::cout << "\n";
   return 0;
 }
