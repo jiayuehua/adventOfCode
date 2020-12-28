@@ -69,6 +69,8 @@ if(ENABLE_FUZZING)
 endif()
 
 add_subdirectory(game24)
+add_subdirectory(aoc2015)
+add_subdirectory(aoc2016)
 add_subdirectory(aoc2020)
 
 option(ENABLE_UNITY "Enable Unity builds of projects" OFF)
