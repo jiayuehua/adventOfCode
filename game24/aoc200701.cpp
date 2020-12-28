@@ -58,7 +58,7 @@ struct edge_printer : public boost::base_visitor<edge_printer<Tag>>
   template<class Edge, class Graph>
   void operator()(Edge e, Graph &G)
   {
-    //std::cout << m_edge_type << ": " << source(e, G) << " --> " << target(e, G) << std::endl;
+    std::cout << m_edge_type << ": " << source(e, G) << " --> " << target(e, G) << std::endl;
     //std::cout << m_edge_type << ": " << idbag_[source(e, G)] << " --> " << idbag_[target(e, G)] << std::endl;
     if (n) {
 
@@ -89,25 +89,25 @@ struct Bags
     using std::cout;
     using namespace boost;
 
-    //  E edges[] = { E(0, 2), E(1, 1), E(1, 3), E(2, 1), E(2, 3), E(3, 1), E(3, 4), E(4, 0), E(4, 1), E(5, 6), E(6, 5) };
-    //#if defined(BOOST_MSVC) && BOOST_MSVC <= 1300
-    //  Graph G(5);
-    //  for (std::size_t j = 0; j < sizeof(edges) / sizeof(E); ++j)
-    //    add_edge(edges[j].first, edges[j].second, G);
-    //#else
-    //  Graph G(edges, edges + sizeof(edges) / sizeof(E), 5);
-    //#endif
-    //
+    E edges[] = { E(0, 2), E(1, 1), E(1, 3), E(2, 1), E(2, 3), E(3, 1), E(3, 4), E(4, 0), E(4, 1), E(5, 6), E(6, 5) };
+#if defined(BOOST_MSVC) && BOOST_MSVC <= 1300
+    Graph Gb(5);
+    for (std::size_t j = 0; j < sizeof(edges) / sizeof(E); ++j)
+      add_edge(edges[j].first, edges[j].second, G);
+#else
+    Graph Gb(edges, edges + sizeof(edges) / sizeof(E), 5);
+#endif
+
     typedef boost::graph_traits<Graph>::vertices_size_type size_type;
 
     //std::vector<size_type> d(num_vertices(G));
     //std::vector<size_type> f(num_vertices(G));
 
-    //cout << "DFS categorized directed graph" << endl;
-    //depth_first_search(G,
-    //  visitor(make_dfs_visitor(make_list(print_edge("tree", on_tree_edge()),
-    //    print_edge("back", on_back_edge()),
-    //    print_edge("forward or cross", on_forward_or_cross_edge())))));
+    cout << "DFS categorized directed graph" << endl;
+    depth_first_search(Gb,
+      visitor(make_dfs_visitor(make_list(print_edge("tree", on_tree_edge()),
+        print_edge("back", on_back_edge()),
+        print_edge("forward or cross", on_forward_or_cross_edge())))));
 
     //cout << endl
     //     << "BFS categorized directed graph" << endl;
@@ -143,7 +143,6 @@ public:
     std::string line;
 
     for (int i = 0, n = 0; std::getline(is, line); ++n) {
-      std::cout << n << std::endl;
       std::istringstream iss(line);
       iss >> color >> attr;
       //std::pair<std::string, std::string> edge;
