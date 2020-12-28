@@ -1,4 +1,3 @@
-
 #include <fstream>
 #include <sstream>
 #include <iostream>
@@ -6,7 +5,6 @@
 #include <fmt/format.h>
 #include <string>
 #include <iomanip>
-#include <boost/variant.hpp>
 #include <unordered_map>
 #include <range/v3/all.hpp>
 #include "matrix.h"
