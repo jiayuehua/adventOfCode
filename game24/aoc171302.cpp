@@ -1,55 +1,80 @@
-#include <complex>
-#include <exception>
 #include <fstream>
+#include <sstream>
+#include <iterator>
 #include <iostream>
+#include <fmt/format.h>
 #include <string>
-#include <vector>
-#include <boost/circular_buffer.hpp>
-#include <range/v3/all.hpp>
 #include <numeric>
+#include <execution>
+#include <utility>
 #include <algorithm>
-namespace views = ranges::views;
+#include <map>
+#include <cstdint>
+#include <boost/integer/mod_inverse.hpp>
+using std::int64_t;
+using gint = int64_t;
+using std::int64_t;
+template<class T>
+constexpr T mymod(T n, T N) noexcept
+{
+  n %= N;
+  if (n < 0) {
+    n += N;
+  }
+  return n;
+}
+struct TimeStamp
+{
 
-void spin(std::string &s, const std::string &, const std::string &num)
-{
-  auto n = std::stoi(num);
-  std::rotate(s.begin(), s.end() - n, s.end());
-}
-void xchg(std::string &s, const std::string &l, const std::string &r)
-{
-  auto ln = std::stoi(l);
-  auto rn = std::stoi(r);
-  std::iter_swap(s.begin() + ln, s.begin() + rn);
-}
-void part(std::string &s, const std::string &l, const std::string &r)
-{
-  auto lpos = s.find(l);
-  auto rpos = s.find(r);
-  std::iter_swap(s.begin() + lpos, s.begin() + rpos);
-}
-typedef void (*Op)(std::string &s, const std::string &l, const std::string &r);
+  static constexpr int64_t firstvalid(int r, int pos) noexcept
+  {
+    std::array<std::pair<int64_t, int64_t>, 2> primeposs{
+      std::pair{ 91l, r },
+      std::pair{ pos, 0l },
+    };
+
+    int64_t sum = 0;
+
+    int64_t M = 1;
+    for (auto [p, i] : primeposs) {
+      M *= p;
+    }
+    for (int i = 0; i < primeposs.size(); ++i) {
+      auto [mi, a] = primeposs[i];
+      auto Mi = M / mi;
+      auto ti = boost::integer::mod_inverse(Mi, mi);
+      sum += Mi * ti * a;
+    }
+    return sum % M;
+  }
+};
 int main(int argc, char **argv)
 {
   if (argc > 1) {
-    std::map<std::string, Op> ops;
-    ops.insert(std::pair{ "x", &xchg });
-    ops.insert(std::pair{ "p", &part });
-    ops.insert(std::pair{ "s", &spin });
-
     std::ifstream ifs(argv[1]);
-
-    std::vector<std::string> vs;
-    std::istream_iterator<std::string> isb(ifs);
-    std::istream_iterator<std::string> ise;
-    std::copy(isb, ise, std::back_inserter(vs));
-    std::string s("abcdefghijklmnop");
-
-
-    auto r = vs | views::chunk(3);
-    ranges::for_each(r, [&s, ops](auto range) {
-      auto i = ops.find(range[0]);
-      (i->second)(s, range[1], range[2]);
-    });
-    std::cout << s << std::endl;
+    int r, p;
+    int sum = 0;
+    std::vector<std::pair<int, int>> v;
+    for (int i = 0; ifs >> r >> p; ++i) {
+      v.push_back(std::pair{ r, 2 * (p - 1) });
+    }
+    bool notfound = true;
+    auto t = 0;
+    for (; notfound; ++t) {
+      bool alltrue = true;
+      for (auto [f, s] : v) {
+        if (!((t + f) % s)) {
+          //fmt::print("f:{},s:{}\n", f, s);
+          alltrue = false;
+          break;
+        }
+      }
+      if (alltrue) {
+        //fmt::print("foundt:{}\n", t);
+        break;
+      }
+      notfound = !alltrue;
+    }
+    fmt::print("t:{}\n", t);
   }
 }
