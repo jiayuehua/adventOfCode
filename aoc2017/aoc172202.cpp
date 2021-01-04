@@ -37,7 +37,7 @@ class Game
     return (0 <= cur_.x && cur_.x < N && 0 <= cur_.y && cur_.y < N);
   }
   Position startdir_;
-  static constexpr Position dir_[4] = { { 0, 1 }, { 1, 0 }, { 0, -1 }, { -1, 0 } };//left,same,right,reverses
+  static constexpr Position dir_[4] = { { 0, 1 }, { 1, 0 }, { 0, -1 }, { -1, 0 } };
   int cnt_ = 0;
 
 
@@ -87,8 +87,6 @@ int main(int argc, char **argv)
     Game g;
     std::ifstream iss(argv[1]);
     iss >> g;
-    //std::cout << g.forward(100) << std::endl;
     std::cout << g.forward(10000000) << std::endl;
-    //std::cout << g.forward(9930) << std::endl;
   }
 }
