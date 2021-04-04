@@ -296,6 +296,10 @@ public:
   {
     return !(*this == r);
   }
+  bool operator<(FixedMatrix r) const noexcept
+  {
+    return std::lexicographical_compare(std::begin(v), std::end(v), std::begin(r.v), std::end(r.v));
+  }
 
   T &operator()(int x, int y) { return row(x)[y]; }
   const T &operator()(int x, int y) const { return row(x)[y]; }
@@ -380,9 +384,10 @@ public:
   }
   friend std::ostream &operator<<(std::ostream &os, const FixedMatrix &m)
   {
-    for (std::size_t y = 0; y < m.rowCount(); y++) {
-      for (std::size_t x = 0; x < m.colCount(); x++) {
-        os << m(y, x) << ",";
+    char a[256] = ".#";
+    for (int y = 0; y < m.rowCount(); y++) {
+      for (int x = 0; x < m.colCount(); x++) {
+        os << a[m(y, x)];
       }
       os << "\n";
     }
@@ -514,7 +519,7 @@ public:
   friend std::ostream &operator<<(std::ostream &os, const Matrix &m)
   {
     for (auto y = 0; y < m.rowCount(); y++) {
-      for (auto x = 0; x < m.colCount(); x++) os << m(y, x) << "\t";
+      for (auto x = 0; x < m.colCount(); x++) os << m(y, x);
       os << "\n";
     }
     return os;

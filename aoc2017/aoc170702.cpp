@@ -5,7 +5,7 @@
 #include <string>
 #include <sstream>
 #include <fstream>
-using namespace stlab;
+#include <iterator>
 struct Node
 {
   std::string key;

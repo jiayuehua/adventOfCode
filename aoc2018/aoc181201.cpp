@@ -4,6 +4,7 @@
 #include <vector>
 #include <range/v3/all.hpp>
 #include <cstdint>
+#include <list>
 #include <iterator>
 #include <string_view>
 namespace views = ranges::views;
@@ -60,12 +61,25 @@ public:
   }
 };
 
+
 int main(int argc, char **argv)
 {
-  Pots p;
-  std::ifstream ifs(argv[1]);
-  ifs >> p;
-  for (int i = 0; i < 200; ++i) {
-    std::cout << p.Round(1) << std::endl;
+  auto l = std::list{ 0, 1, 2 };
+
+  //auto v = views::ints(1, 13)[{ 3, ranges::end - 3 }] | views::for_each([](int i) { return views::ints(2 * i, 2 * i + 2); }) | views::slice(3, 4);
+  auto v = views::ints(1, 13)[{ 3, ranges::end - 3 }] | views::transform([](int i) { return 2 * i; }) | views::slice(3, ranges::end - 4);
+  auto vb = views::ints(1, 13)[{ 3, ranges::end - 3 }] | views::filter([](int i) { return i + 2 == 0; }) | views::drop_last(3);
+  auto la = l | views::slice(2, ranges::end - 2);
+  auto lb = la[{ 0, ranges::end - 1 }];
+
+
+  for (auto i : v) {
+    std::cout << i << std::endl;
   }
+  //Pots p;
+  //std::ifstream ifs(argv[1]);
+  //ifs >> p;
+  //for (int i = 0; i < 200; ++i) {
+  //  std::cout << p.Round(1) << std::endl;
+  //}
 }

@@ -19,7 +19,7 @@ using namespace std::literals::complex_literals;
 namespace views = ranges::views;
 
 template<int N>
-concept Module4 = N % 4 == 0;
+concept Module2 = N % 2 == 0;
 
 template<int N>
 auto rotateSquare(const FixedMatrix<bool, N, N> &m)
@@ -118,38 +118,38 @@ public:
   }
 
   template<int N>
-  requires(Module4<N>)
+  requires(Module2<N>)
     FixedMatrix<bool, N + N / 2> transform(const FixedMatrix<bool, N> &input)
   {
 
-    std::cout << "transform" << N << std::endl;
+    //std::cout << "transform" << N << std::endl;
     FixedMatrix<bool, N + N / 2> r;
     for (int i = 0; i < N; i += 2) {
       for (int j = 0; j < N; j += 2) {
         FixedMatrix<bool, 2, 2> m = subMatrix<2>(input, i, j);
-        std::cout << "--" << i << "," << j << "-input--------" << std::endl;
+        //std::cout << "--" << i << "," << j << "-input--------" << std::endl;
 
-        std::cout << m << std::endl;
-        std::cout << "--" << i * 3 / 2 << "," << j * 3 / 2 << "-output--------" << std::endl;
-        std::cout << ruleB_[m] << std::endl;
+        //std::cout << m << std::endl;
+        //std::cout << "--" << i * 3 / 2 << "," << j * 3 / 2 << "-output--------" << std::endl;
+        //std::cout << ruleB_[m] << std::endl;
         assignsubMatrix(r, i * 3 / 2, j * 3 / 2, ruleB_[m]);
       }
     }
     return r;
   }
   template<int N>
-  requires((N % 6) == 0 || N == 3 || Module4<N>)
+  requires((N % 3) == 0 || Module2<N>)
     FixedMatrix<bool, N + N / 3> transform(const FixedMatrix<bool, N> &input)
   {
-    std::cout << "transform" << N << std::endl;
+    //std::cout << "transform" << N << std::endl;
     FixedMatrix<bool, N + N / 3> r;
     for (int i = 0; i < N; i += 3) {
       for (int j = 0; j < N; j += 3) {
         FixedMatrix<bool, 3, 3> m = subMatrix<3>(input, i, j);
-        std::cout << "--" << i << "," << j << "-input--------" << std::endl;
-        std::cout << m << std::endl;
-        std::cout << "--" << i * 4 / 3 << "," << j * 4 / 3 << "-output--------" << std::endl;
-        std::cout << ruleC_[m] << std::endl;
+        //std::cout << "--" << i << "," << j << "-input--------" << std::endl;
+        //std::cout << m << std::endl;
+        //std::cout << "--" << i * 4 / 3 << "," << j * 4 / 3 << "-output--------" << std::endl;
+        //std::cout << ruleC_[m] << std::endl;
         assignsubMatrix(r, i * 4 / 3, j * 4 / 3, ruleC_[m]);
       }
     }
@@ -237,16 +237,25 @@ int main(int argc, char **argv)
     mat_(2, 0) = true;
     mat_(2, 1) = true;
     mat_(2, 2) = true;
-    auto A1 = g.transform(mat_);//4
-    std::cout << A1 << std::endl;
-    auto A2 = g.transform(A1);//6
-    std::cout << A2 << std::endl;
+    auto A1 = g.transform(mat_);
+    auto A2 = g.transform(A1);
     auto A3 = g.transform(A2);
-    std::cout << A3 << std::endl;
     auto A4 = g.transform(A3);
-    std::cout << A4 << std::endl;
     auto A5 = g.transform(A4);
-    std::cout << A5 << std::endl;
     std::cout << std::count(std::begin(A5.array()), std::end(A5.array()), 1) << std::endl;
+    auto A6 = g.transform(A5);
+    auto A7 = g.transform(A6);
+    auto A8 = g.transform(A7);
+    auto A9 = g.transform(A8);
+    auto A10 = g.transform(A9);
+    auto A11 = g.transform(A10);
+    auto A12 = g.transform(A11);
+    auto A13 = g.transform(A12);
+    auto A14 = g.transform(A13);
+    auto A15 = g.transform(A14);
+    auto A16 = g.transform(A15);
+    auto A17 = g.transform(A16);
+    auto A18 = g.transform(A17);
+    std::cout << std::count(std::begin(A18.array()), std::end(A18.array()), 1) << std::endl;
   }
 }

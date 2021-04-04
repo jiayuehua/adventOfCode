@@ -47,10 +47,58 @@ struct Binop
   Func fun;
   std::vector<std::string> childs;
 };
+struct Node
+{
+  std::string name;
+  std::map<std::string, unsigned short> *ptables_ = 0;
+  Func fun = nullptr;
+  unsigned short value;
+  std::vector<Node> childs;
+  auto operator<=>(const std::string &other) const
+  {
+    return name <=> other;
+  }
+  auto operator<=>(const Node &other) const
+  {
+    return name <=> other.name;
+  }
+  unsigned short calTotal()
+  {
+    unsigned short lhs = 0;
+    unsigned short rhs = 0;
+    if (auto it = ptables_->find(name); it != ptables_->end()) {
+      return it->second;
+    }
+    std::vector<int> opands(2);
+    for (int i = 0; i < childs.size(); ++i) {
+      opands[i] = childs[i].calTotal();
+    }
+    auto r = fun(opands[0], opands[1]);
+    (*ptables_)[name] = r;
+    return r;
+  }
+};
 
+struct compare
+{
+  using is_transparent = void;
+  bool operator()(const Node &l, const Node &r) const
+  {
+    return l < r;
+  }
+  bool operator()(const Node &l, const std::string &r) const
+  {
+    return l.name < r;
+  }
+  bool operator()(const std::string &l, const Node &r) const
+  {
+    return l < r.name;
+  }
+};
 struct Table
 {
   std::map<std::string, Binop> binops;
+  Node root_;
   std::string rootname_;
   std::map<std::string, unsigned short> values;
   int total_;

@@ -56,11 +56,8 @@ public:
       for (auto &&[kb, vb] : v) {
         if (vb > maxfs) {
           maxfs = vb;
-          std::cout << vb << std::endl;
-          std::cout << key << std::endl;
           key = k;
           time = kb.lower();
-          std::cout << maxfs << std::endl;
         }
       }
     }

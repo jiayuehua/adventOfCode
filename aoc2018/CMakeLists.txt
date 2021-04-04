@@ -10,6 +10,10 @@ find_package(Threads MODULE REQUIRED)
 #    find_path(CONSTEXPR_INCLUDE_DIRS "cx_algorithm.h")
 #    target_include_directories(${arg} PRIVATE ${CONSTEXPR_INCLUDE_DIRS})
 
+    find_path(PLF_COLONY_INCLUDE_DIRS "plf_colony.h")
+
+    find_package(date CONFIG REQUIRED)
+
 
 #find_path(BOOST_ITERATOR_INCLUDE_DIRS "boost/function_output_iterator.hpp")
 target_include_directories(${arg} PRIVATE
@@ -20,8 +24,30 @@ target_link_libraries(
   ${arg} PRIVATE project_options project_warnings 
                   range-v3 range-v3-meta range-v3::meta range-v3-concepts fmt::fmt-header-only TBB::tbb
                   Threads::Threads #Folly::folly Folly::folly_deps #Folly::follybenchmark Folly::folly_test_util
-                   )
+date::date date::date-tz
+     ${PLF_COLONY_INCLUDE_DIRS})
 
                    endfunction()
-aoc(aoc180102)
-aoc(aoc180202)
+#aoc(aoc180102)
+#aoc(aoc180202)
+#aoc(aoc180401)
+#aoc(aoc180501)
+#aoc(aoc180601)
+#aoc(aoc180602)
+#aoc(aoc180801)
+#aoc(aoc180802)
+#aoc(aoc180901)
+#aoc(aoc181001)
+#aoc(aoc181101)
+#aoc(aoc181102)
+
+#aoc(aoc181201)
+#aoc(aoc181301)
+#aoc(aoc181302)
+#aoc(aoc181303)
+#aoc(aoc181401)
+#aoc(aoc181402)
+#aoc(aoc181601)
+#aoc(aoc181602)
+#aoc(aoc181801)
+#aoc(interview)
